@@ -1,0 +1,115 @@
+﻿@page "/"
+@using LINQAnalyzer.Domain.Models
+@using LINQAnalyzer.Infrastructure.Services
+@using Microsoft.AspNetCore.Components.Web
+@inject ScanOrchestratorService Orchestrator
+@rendermode InteractiveServer
+
+<PageTitle>LINQ Performance Analyzer</PageTitle>
+
+<div class="container mt-4">
+    <h2>🚀 LINQ Performance Analyzer Agent</h2>
+    <p class="text-muted">Analyze C# repositories for LINQ/EF anti-patterns and generate AI-powered optimization reports.</p>
+
+    <div class="card p-4 shadow-sm mb-4">
+        <h4>Scan Configuration</h4>
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Git Repository URL</label>
+            <input @bind="request.GitUrl" class="form-control" placeholder="https://github.com/owner/repo.git" />
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Branch</label>
+                <input @bind="request.Branch" class="form-control" placeholder="main" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Personal Access Token (Optional)</label>
+                <input @bind="request.PersonalAccessToken" type="password" class="form-control" placeholder="ghp_..." />
+            </div>
+        </div>
+
+        <button class="btn btn-primary" @onclick="StartScanAsync" disabled="@isScanning">
+            @if (isScanning)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span>Scanning Repository...</span>
+            }
+            else
+            {
+                <span>Start Analysis</span>
+            }
+        </button>
+    </div>
+
+    @if (latestProgress != null)
+    {
+        <div class="card p-4 shadow-sm mb-4">
+            <h5>Status: @latestProgress.Stage</h5>
+            <p>@latestProgress.Message</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                     role="progressbar" 
+                     style="width: @(latestProgress.PercentComplete)%">
+                    @(latestProgress.PercentComplete)%
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (discoveredIssues.Any())
+    {
+        <h4>Discovered Anti-Patterns (@discoveredIssues.Count)</h4>
+        <div class="list-group mb-4">
+            @foreach (var issue in discoveredIssues)
+            {
+                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1 text-danger">@issue.RuleId - @issue.RuleName</h5>
+                        <small>Line @issue.LineNumber</small>
+                    </div>
+                    <p class="mb-1"><code>@issue.FilePath</code></p>
+                    <pre class="bg-dark text-light p-2 rounded"><code>@issue.Snippet</code></pre>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private ScanRequest request = new ScanRequest();
+    private bool isScanning = false;
+    private ScanProgress? latestProgress;
+    private List<DiscoveredIssue> discoveredIssues = new();
+
+    private async Task StartScanAsync()
+    {
+        if (string.IsNullOrWhiteSpace(request.GitUrl))
+            return;
+
+        isScanning = true;
+        discoveredIssues.Clear();
+
+        try
+        {
+            var result = await Orchestrator.ExecuteScanAsync(request, progress =>
+            {
+                latestProgress = progress;
+                if (progress.LatestIssue != null)
+                {
+                    discoveredIssues.Add(progress.LatestIssue);
+                }
+                InvokeAsync(StateHasChanged);
+            });
+        }
+        catch (Exception ex)
+        {
+            latestProgress = new ScanProgress(request.Id, ScanStage.Failed, 0, $"Error: {ex.Message}");
+        }
+        finally
+        {
+            isScanning = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}
