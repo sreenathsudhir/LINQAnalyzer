@@ -6,6 +6,9 @@ namespace LINQAnalyzer.Application.Interfaces;
 public interface ICodeDiscoveryAgent
 {
     Task<string> CloneRepositoryAsync(ScanRequest request, CancellationToken cancellationToken = default);
+    
+    Task<List<string>> GetRemoteBranchesAsync(string gitUrl, string? personalAccessToken = null, CancellationToken cancellationToken = default);
+    
     void CleanupRepository(string localPath);
 }
 

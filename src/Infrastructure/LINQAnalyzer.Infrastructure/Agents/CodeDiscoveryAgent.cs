@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LibGit2Sharp;
@@ -12,36 +14,30 @@ namespace LINQAnalyzer.Infrastructure.Agents;
 /// </summary>
 public class CodeDiscoveryAgent : ICodeDiscoveryAgent
 {
-    /// <summary>
-    /// Clones a remote Git repository to an isolated temporary directory.
-    /// Supports public and private repositories (via Personal Access Token).
-    /// </summary>
-    /// <param name="request">Scan parameters containing Git URL, Branch, and Credentials.</param>
-    /// <param name="cancellationToken">Cancellation token to abort operations.</param>
-    /// <returns>The local folder path where the repository was cloned.</returns>
     public Task<string> CloneRepositoryAsync(ScanRequest request, CancellationToken cancellationToken = default)
     {
-        // Generate an isolated temporary directory name based on the Scan ID
         string tempDirectory = Path.Combine(Path.GetTempPath(), "LINQScan_" + request.Id.ToString("N"));
 
         var cloneOptions = new CloneOptions
         {
             BranchName = string.IsNullOrWhiteSpace(request.Branch) ? "main" : request.Branch,
-            RecurseSubmodules = false
+            FetchOptions =
+            {
+                CredentialsProvider = (_url, _userFromUrl, _types) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(request.PersonalAccessToken))
+                    {
+                        return new UsernamePasswordCredentials
+                        {
+                            Username = "token",
+                            Password = request.PersonalAccessToken
+                        };
+                    }
+                    return null;
+                }
+            }
         };
 
-        // If a Personal Access Token (PAT) is provided, set up HTTPS credentials
-        if (!string.IsNullOrWhiteSpace(request.PersonalAccessToken))
-        {
-            cloneOptions.FetchOptions.CredentialsProvider = (_url, _user, _cred) =>
-                new UsernamePasswordCredentials
-                {
-                    Username = "token", // Standard username used for Git PAT authentication
-                    Password = request.PersonalAccessToken
-                };
-        }
-
-        // Perform the clone operation on a background thread
         return Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -51,14 +47,46 @@ public class CodeDiscoveryAgent : ICodeDiscoveryAgent
     }
 
     /// <summary>
-    /// Cleans up temporary clone directories and overrides read-only Git file permissions on OS filesystem.
+    /// Fetches all remote branch names without cloning full repository source files.
     /// </summary>
-    /// <param name="localPath">The local path to delete.</param>
+    public Task<List<string>> GetRemoteBranchesAsync(string gitUrl, string? personalAccessToken = null, CancellationToken cancellationToken = default)
+    {
+        return Task.Run(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var remoteRefs = Repository.ListRemoteReferences(
+                gitUrl,
+                (_url, _userFromUrl, _types) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(personalAccessToken))
+                    {
+                        return new UsernamePasswordCredentials
+                        {
+                            Username = "token",
+                            Password = personalAccessToken
+                        };
+                    }
+                    return null;
+                },
+                null
+            );
+
+            var branches = remoteRefs
+                .Where(r => !r.IsTag && r.CanonicalName.StartsWith("refs/heads/"))
+                .Select(r => r.CanonicalName.Replace("refs/heads/", ""))
+                .Distinct()
+                .OrderBy(b => b)
+                .ToList();
+
+            return branches;
+        }, cancellationToken);
+    }
+
     public void CleanupRepository(string localPath)
     {
         if (Directory.Exists(localPath))
         {
-            // Remove read-only attributes from Git internal files (.git folder) to prevent AccessDenied exceptions
             foreach (var file in Directory.GetFiles(localPath, "*", SearchOption.AllDirectories))
             {
                 File.SetAttributes(file, FileAttributes.Normal);

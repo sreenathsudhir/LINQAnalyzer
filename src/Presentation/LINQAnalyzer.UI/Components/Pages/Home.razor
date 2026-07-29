@@ -3,73 +3,196 @@
 @using LINQAnalyzer.Infrastructure.Services
 @using Microsoft.AspNetCore.Components.Web
 @inject ScanOrchestratorService Orchestrator
+@inject IJSRuntime JS
+@inject LINQAnalyzer.Application.Interfaces.IDocumentationAgent DocumentationAgent
+@inject LINQAnalyzer.Application.Interfaces.ICodeDiscoveryAgent DiscoveryAgent
 @rendermode InteractiveServer
 
 <PageTitle>LINQ Performance Analyzer</PageTitle>
 
-<div class="container mt-4">
-    <h2>🚀 LINQ Performance Analyzer Agent</h2>
-    <p class="text-muted">Analyze C# repositories for LINQ/EF anti-patterns and generate AI-powered optimization reports.</p>
-
-    <div class="card p-4 shadow-sm mb-4">
-        <h4>Scan Configuration</h4>
-        <div class="mb-3">
-            <label class="form-label font-weight-bold">Git Repository URL</label>
-            <input @bind="request.GitUrl" class="form-control" placeholder="https://github.com/owner/repo.git" />
+<div class="container my-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h2 class="mb-1">🚀 LINQ Performance Analyzer</h2>
+            <p class="text-muted mb-0">Automated AST code analysis and AI-powered Entity Framework & LINQ optimization engine.</p>
         </div>
-        
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Branch</label>
-                <input @bind="request.Branch" class="form-control" placeholder="main" />
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Personal Access Token (Optional)</label>
-                <input @bind="request.PersonalAccessToken" type="password" class="form-control" placeholder="ghp_..." />
-            </div>
-        </div>
-
-        <button class="btn btn-primary" @onclick="StartScanAsync" disabled="@isScanning">
-            @if (isScanning)
-            {
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                <span>Scanning Repository...</span>
-            }
-            else
-            {
-                <span>Start Analysis</span>
-            }
-        </button>
     </div>
 
+    <!-- Scan Configuration Form -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Scan Configuration</h5>
+        </div>
+        <div class="card-body">
+            <!-- Target Repository Inputs -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-12">
+                    <label class="form-label fw-bold">Git Repository URL <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input @bind="request.GitUrl" class="form-control" placeholder="https://github.com/owner/repo.git" />
+                        <button class="btn btn-outline-primary" type="button" @onclick="FetchBranchesAsync" disabled="@isFetchingBranches">
+                            @if (isFetchingBranches)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                <span>Fetching...</span>
+                            }
+                            else
+                            {
+                                <span>🔄 Fetch Branches</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Branch</label>
+                    @if (availableBranches.Any())
+                    {
+                        <select @bind="request.Branch" class="form-select">
+                            @foreach (var branch in availableBranches)
+                            {
+                                <option value="@branch">@branch</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <input @bind="request.Branch" class="form-control" placeholder="main" />
+                    }
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Personal Access Token (Optional)</label>
+                    <input @bind="request.PersonalAccessToken" type="password" class="form-control" placeholder="ghp_..." />
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Rule Selection Panel -->
+            <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <label class="form-label fw-bold mb-0">Active AST Analysis Rules</label>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary me-1" @onclick="SelectAllRules">Select All</button>
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="DeselectAllRules">Clear All</button>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    @foreach (var rule in RuleRegistry.AvailableRules)
+                    {
+                        var isChecked = selectedRuleMap.TryGetValue(rule.Id, out var val) && val;
+                        <div class="col-md-6">
+                            <div class="card h-100 p-2 border @(isChecked ? "border-primary bg-light" : "")">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="@rule.Id" 
+                                           checked="@isChecked" 
+                                           @onchange="e => ToggleRule(rule.Id, e.Value)" />
+                                    <label class="form-check-label fw-bold" for="@rule.Id">
+                                        <span class="badge @GetSeverityBadgeClass(rule.Severity) me-1">@rule.Severity</span>
+                                        [@rule.Id] @rule.Name
+                                    </label>
+                                </div>
+                                <small class="text-muted ms-4 mt-1">@rule.Description</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- AI Settings & Launch Button -->
+            <div class="row align-items-center g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold mb-1">Max AI Reviews per Scan: <span class="text-primary">@request.MaxAiEvaluations</span></label>
+                    <input type="range" class="form-range" min="1" max="20" @bind="request.MaxAiEvaluations" />
+                    <small class="text-muted d-block">Caps QBurst Gateway AI analysis to the top flagged items.</small>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-success btn-lg px-4" @onclick="StartScanAsync" disabled="@isScanning">
+                        @if (isScanning)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>Scanning Pipeline Active...</span>
+                        }
+                        else
+                        {
+                            <span>🔍 Launch Analysis</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-Time Progress Tracker -->
     @if (latestProgress != null)
     {
-        <div class="card p-4 shadow-sm mb-4">
-            <h5>Status: @latestProgress.Stage</h5>
-            <p>@latestProgress.Message</p>
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                     role="progressbar" 
-                     style="width: @(latestProgress.PercentComplete)%">
-                    @(latestProgress.PercentComplete)%
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Stage: <span class="text-primary">@latestProgress.Stage</span></h5>
+                    <span class="fw-bold">@(latestProgress.PercentComplete)%</span>
+                </div>
+                <p class="text-muted mb-2">@latestProgress.Message</p>
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated @(latestProgress.Stage == ScanStage.Failed ? "bg-danger" : "bg-primary")" 
+                         role="progressbar" 
+                         style="width: @(latestProgress.PercentComplete)%">
+                    </div>
                 </div>
             </div>
         </div>
     }
 
+    <!-- Live Discovered Anti-Patterns -->
     @if (discoveredIssues.Any())
     {
-        <h4>Discovered Anti-Patterns (@discoveredIssues.Count)</h4>
-        <div class="list-group mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h4 class="mb-0">Discovered Anti-Patterns (@discoveredIssues.Count)</h4>
+            <div>
+                <button class="btn btn-outline-primary btn-sm me-2" @onclick="DownloadHtmlReport" disabled="@string.IsNullOrEmpty(generatedHtmlReport)">
+                    📥 Download HTML Report
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" @onclick="CopyMarkdownReport" disabled="@string.IsNullOrEmpty(generatedMarkdownReport)">
+                    📋 Copy Markdown
+                </button>
+            </div>
+        </div>
+
+        <div class="row g-3">
             @foreach (var issue in discoveredIssues)
             {
-                <div class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1 text-danger">@issue.RuleId - @issue.RuleName</h5>
-                        <small>Line @issue.LineNumber</small>
+                <div class="col-12">
+                    <div class="card shadow-sm border-start border-4 border-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0 text-danger">
+                                    <span class="badge bg-danger me-2">@issue.RuleId</span>
+                                    @issue.RuleName
+                                </h5>
+                                <span class="text-muted small">Line @issue.LineNumber</span>
+                            </div>
+
+                            <p class="mb-2 text-muted">📁 <code>@issue.FilePath</code></p>
+
+                            <div class="bg-dark text-light p-3 rounded mb-3">
+                                <pre class="m-0"><code>@issue.Snippet</code></pre>
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(issue.AiAnalysis))
+                            {
+                                <div class="bg-light border rounded p-3 mt-2">
+                                    <h6 class="fw-bold text-success">🤖 AI Optimization Guidance (QBurst Gateway)</h6>
+                                    <div class="text-dark small">
+                                        @((MarkupString)issue.AiAnalysis.Replace("\n", "<br/>"))
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
-                    <p class="mb-1"><code>@issue.FilePath</code></p>
-                    <pre class="bg-dark text-light p-2 rounded"><code>@issue.Snippet</code></pre>
                 </div>
             }
         </div>
@@ -81,26 +204,113 @@
     private bool isScanning = false;
     private ScanProgress? latestProgress;
     private List<DiscoveredIssue> discoveredIssues = new();
+    private Dictionary<string, bool> selectedRuleMap = new();
+
+    private string generatedHtmlReport = string.Empty;
+    private string generatedMarkdownReport = string.Empty;
+
+    // Branch fetching state
+    private List<string> availableBranches = new();
+    private bool isFetchingBranches = false;
+    private string? branchFetchError = null;
+
+    protected override void OnInitialized()
+    {
+        // Default all available rules to selected
+        foreach (var rule in RuleRegistry.AvailableRules)
+        {
+            selectedRuleMap[rule.Id] = rule.IsEnabledByDefault;
+        }
+    }
+
+    private void ToggleRule(string ruleId, object? value)
+    {
+        if (value is bool isChecked)
+        {
+            selectedRuleMap[ruleId] = isChecked;
+        }
+    }
+
+    private void SelectAllRules()
+    {
+        foreach (var rule in RuleRegistry.AvailableRules)
+        {
+            selectedRuleMap[rule.Id] = true;
+        }
+    }
+
+    private void DeselectAllRules()
+    {
+        foreach (var rule in RuleRegistry.AvailableRules)
+        {
+            selectedRuleMap[rule.Id] = false;
+        }
+    }
+
+    private async Task FetchBranchesAsync()
+    {
+        if (string.IsNullOrWhiteSpace(request.GitUrl))
+            return;
+
+        isFetchingBranches = true;
+        branchFetchError = null;
+        availableBranches.Clear();
+
+        try
+        {
+            availableBranches = await DiscoveryAgent.GetRemoteBranchesAsync(request.GitUrl, request.PersonalAccessToken);
+
+            // Auto-select main or master if present, otherwise pick the first branch
+            if (availableBranches.Contains("main"))
+                request.Branch = "main";
+            else if (availableBranches.Contains("master"))
+                request.Branch = "master";
+            else if (availableBranches.Any())
+                request.Branch = availableBranches.First();
+        }
+        catch (Exception ex)
+        {
+            branchFetchError = $"Failed to fetch branches: {ex.Message}";
+        }
+        finally
+        {
+            isFetchingBranches = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
 
     private async Task StartScanAsync()
     {
         if (string.IsNullOrWhiteSpace(request.GitUrl))
             return;
 
+        // Collect checked rule IDs
+        request.SelectedRuleIds = selectedRuleMap
+            .Where(kvp => kvp.Value)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
         isScanning = true;
         discoveredIssues.Clear();
+        generatedHtmlReport = string.Empty;
+        generatedMarkdownReport = string.Empty;
 
         try
         {
+            // Execute scan and capture result
             var result = await Orchestrator.ExecuteScanAsync(request, progress =>
             {
                 latestProgress = progress;
-                if (progress.LatestIssue != null)
+                if (progress.LatestIssue != null && !discoveredIssues.Contains(progress.LatestIssue))
                 {
                     discoveredIssues.Add(progress.LatestIssue);
                 }
                 InvokeAsync(StateHasChanged);
             });
+
+            // Store reports for download buttons
+            generatedHtmlReport = result.HtmlReport;
+            generatedMarkdownReport = await DocumentationAgent.GenerateMarkdownReportAsync(request, discoveredIssues);
         }
         catch (Exception ex)
         {
@@ -112,4 +322,27 @@
             await InvokeAsync(StateHasChanged);
         }
     }
+
+    private async Task DownloadHtmlReport()
+    {
+        if (!string.IsNullOrEmpty(generatedHtmlReport))
+        {
+            await JS.InvokeVoidAsync("downloadFileFromText", "LINQ_Performance_Report.html", generatedHtmlReport, "text/html");
+        }
+    }
+
+    private async Task CopyMarkdownReport()
+    {
+        if (!string.IsNullOrEmpty(generatedMarkdownReport))
+        {
+            await JS.InvokeVoidAsync("copyToClipboard", generatedMarkdownReport);
+        }
+    }
+
+    private string GetSeverityBadgeClass(RuleSeverity severity) => severity switch
+    {
+        RuleSeverity.Critical => "bg-danger",
+        RuleSeverity.Warning => "bg-warning text-dark",
+        _ => "bg-info text-dark"
+    };
 }
