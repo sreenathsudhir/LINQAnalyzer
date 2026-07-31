@@ -10,28 +10,33 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 // -----------------------------------------------------------------------------
-// Core Engine & Agent Registrations (Day 1 Pipeline)
+// Core Engine & Agent Registrations
 // -----------------------------------------------------------------------------
 
-// Agent 1: Code Discovery (Git Cloner)
+// Agent 1: Code Discovery
 builder.Services.AddScoped<ICodeDiscoveryAgent, CodeDiscoveryAgent>();
 
 // Agent 2: Performance Analyzer (Roslyn AST Engine)
 builder.Services.AddScoped<IPerformanceAnalysisAgent, PerformanceAnalysisAgent>();
 
-// Agent 3: AI Review Agent (Configured to talk to QBurst Gateway)
+// Agent 3: AI Review Agent (QBurst Gateway)
 builder.Services.AddHttpClient<IAiReviewAgent, AiReviewAgent>(client =>
 {
-    // Retrieve base URL from appsettings or default to localhost / gateway mock
     var gatewayUrl = builder.Configuration["QBurstGateway:BaseUrl"] ?? "http://localhost:5000/";
     client.BaseAddress = new Uri(gatewayUrl);
     client.Timeout = TimeSpan.FromSeconds(60);
 });
 
-// Agent 6: Documentation Agent (Report Generator)
+// Agent 4: Documentation Agent
 builder.Services.AddScoped<IDocumentationAgent, DocumentationAgent>();
 
-// Pipeline Orchestrator Service
+// Agent 5: PDF Export Agent
+builder.Services.AddScoped<IPdfExportAgent, PdfExportAgent>();
+
+// Agent 6: Benchmark Agent
+builder.Services.AddScoped<IBenchmarkAgent, BenchmarkAgent>();
+
+// Pipeline Orchestrator
 builder.Services.AddScoped<ScanOrchestratorService>();
 
 var app = builder.Build();

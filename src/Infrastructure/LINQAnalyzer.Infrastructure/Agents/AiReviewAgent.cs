@@ -27,29 +27,32 @@ public class AiReviewAgent : IAiReviewAgent
     }
 
     /// <summary>
-    /// Sends a flagged code snippet to the AI Gateway for expert performance analysis.
+    /// Sends a flagged code snippet to the AI Gateway for expert performance analysis and refactoring recommendations.
     /// </summary>
     /// <param name="issue">The anti-pattern detected by Roslyn in Agent 2.</param>
     /// <param name="cancellationToken">Async cancellation token.</param>
     /// <returns>AI-generated Markdown explanation and replacement code.</returns>
     public async Task<string> AnalyzeIssueAsync(DiscoveredIssue issue, CancellationToken cancellationToken = default)
     {
-        // 1. Construct a structured engineering prompt
+        // 1. Construct a structured engineering prompt with defined Markdown sections for UI diffs
         var prompt = $"""
-            You are a Senior .NET Performance Engineer specializing in LINQ and Entity Framework Core optimizations.
-            
-            An anti-pattern was flagged during static AST analysis:
+            You are a Senior .NET Performance Engineer specializing in Roslyn AST, LINQ, and EF Core query optimization.
+
+            Analyze this flagged code issue:
             - **Rule Triggered:** {issue.RuleName} ({issue.RuleId})
             - **File Path:** {issue.FilePath} (Line {issue.LineNumber})
-            - **Flagged Snippet:** 
+            - **Flagged Snippet:**
             ```csharp
             {issue.Snippet}
             ```
-            
-            Please provide a concise analysis containing:
-            1. **Root Cause:** Why this specific usage degrades execution time or memory allocation.
-            2. **Optimized Solution:** Clean, ready-to-use C# code snippet replacing the inefficient code.
-            3. **Performance Impact:** Brief estimate of CPU/Memory improvements (e.g., preventing unnecessary allocations or avoiding roundtrips).
+
+            Provide a response strictly formatted in Markdown with these two clear sections:
+
+            ### 💡 Analysis & Impact
+            Explain why this anti-pattern hurts execution time or memory allocation (e.g., memory allocations, extra DB round-trips, N+1 queries, or client-side evaluation).
+
+            ### ⚡ Recommended Refactoring
+            Provide the fully corrected, production-ready C# replacement snippet inside a ```csharp code block.
             """;
 
         // 2. Prepare payload matching standard LLM gateway schema
@@ -85,12 +88,27 @@ public class AiReviewAgent : IAiReviewAgent
                 .GetProperty("content")
                 .GetString();
 
-            return aiText ?? "AI review generated an empty result.";
+            return aiText ?? GetFallbackAnalysis(issue, "AI review returned an empty result.");
         }
         catch (Exception ex)
         {
-            // Fallback gracefully so gateway unavailability doesn't crash the scanning job
-            return $"*AI Analysis Unavailable:* Unable to reach QBurst Gateway. Details: {ex.Message}";
+            // Fall back gracefully with mock suggestion so gateway unavailability doesn't crash the scanning job
+            return GetFallbackAnalysis(issue, ex.Message);
         }
+    }
+
+    private static string GetFallbackAnalysis(DiscoveredIssue issue, string details)
+    {
+        return $"""
+            ### 💡 Analysis & Impact
+            This `{issue.RuleId}` pattern allocates unnecessary memory or triggers extra database round-trips during query execution.
+            *(Note: QBurst AI Gateway unavailable — {details})*
+
+            ### ⚡ Recommended Refactoring
+            ```csharp
+            // Optimized query replacement snippet:
+            // Refactor '{issue.Snippet.Trim()}' to stream items or project fields directly.
+            ```
+            """;
     }
 }

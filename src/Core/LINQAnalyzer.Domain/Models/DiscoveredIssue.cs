@@ -9,4 +9,9 @@ public record DiscoveredIssue(
 )
 {
     public string? AiAnalysis { get; set; }
+
+    // Day 4: Execution Sandbox Metrics
+    public long EstimatedAllocatedBytes { get; set; }
+    public double ExecutionTimeMs { get; set; }
+    public string? SimulatedSql { get; set; }
 }

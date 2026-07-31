@@ -8,7 +8,7 @@ using LINQAnalyzer.Domain.Models;
 namespace LINQAnalyzer.Infrastructure.Services;
 
 /// <summary>
-/// Pipeline orchestrator that coordinates Agents 1, 2, 3, and 6 to execute the full scan job.
+/// Pipeline orchestrator that coordinates Agents to execute the full scan job.
 /// </summary>
 public class ScanOrchestratorService
 {
@@ -16,22 +16,25 @@ public class ScanOrchestratorService
     private readonly IPerformanceAnalysisAgent _analysisAgent;
     private readonly IAiReviewAgent _aiReviewAgent;
     private readonly IDocumentationAgent _documentationAgent;
+    private readonly IBenchmarkAgent _benchmarkAgent; // Day 4
 
     public ScanOrchestratorService(
         ICodeDiscoveryAgent discoveryAgent,
         IPerformanceAnalysisAgent analysisAgent,
         IAiReviewAgent aiReviewAgent,
-        IDocumentationAgent documentationAgent)
+        IDocumentationAgent documentationAgent,
+        IBenchmarkAgent benchmarkAgent)
     {
         _discoveryAgent = discoveryAgent;
         _analysisAgent = analysisAgent;
         _aiReviewAgent = aiReviewAgent;
         _documentationAgent = documentationAgent;
+        _benchmarkAgent = benchmarkAgent;
     }
 
     public async Task<(List<DiscoveredIssue> Issues, string HtmlReport)> ExecuteScanAsync(
         ScanRequest request, 
-        System.Action<LINQAnalyzer.Domain.Models.ScanProgress> onProgress, 
+        Action<ScanProgress> onProgress, 
         CancellationToken cancellationToken = default)
     {
         string? clonedPath = null;
@@ -49,8 +52,22 @@ public class ScanOrchestratorService
                 issue => onProgress(new ScanProgress(request.Id, ScanStage.ParsingRoslynAst, 55, $"Flagged issue in {issue.FilePath}", issue)),
                 cancellationToken);
 
+            // Stage 2.5: Benchmark Engine (Day 4 Execution Sandbox)
+            if (issues.Count > 0)
+            {
+                onProgress(new ScanProgress(request.Id, ScanStage.ParsingRoslynAst, 60, "Running execution sandbox & SQL simulations..."));
+                foreach (var issue in issues)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var benchmark = await _benchmarkAgent.BenchmarkSnippetAsync(issue.Snippet);
+                    issue.EstimatedAllocatedBytes = benchmark.EstimatedAllocatedBytes;
+                    issue.ExecutionTimeMs = benchmark.ExecutionTimeMs;
+                    issue.SimulatedSql = benchmark.ExecutedSql;
+                }
+            }
+
             // Stage 3: Agent 3 - AI Review (QBurst Gateway)
-            onProgress(new ScanProgress(request.Id, ScanStage.RunningAiAnalysis, 70, "Running AI performance reviews..."));
+            onProgress(new ScanProgress(request.Id, ScanStage.RunningAiAnalysis, 75, "Running AI performance reviews..."));
             int evaluationsCount = Math.Min(issues.Count, request.MaxAiEvaluations);
             for (int i = 0; i < evaluationsCount; i++)
             {
