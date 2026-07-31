@@ -6,6 +6,7 @@
 @inject IJSRuntime JS
 @inject LINQAnalyzer.Application.Interfaces.IDocumentationAgent DocumentationAgent
 @inject LINQAnalyzer.Application.Interfaces.ICodeDiscoveryAgent DiscoveryAgent
+@inject LINQAnalyzer.Application.Interfaces.IPdfExportAgent PdfExportAgent
 @rendermode InteractiveServer
 
 <PageTitle>LINQ Performance Analyzer</PageTitle>
@@ -29,7 +30,7 @@
                 <div class="col-md-12">
                     <label class="form-label fw-bold">Git Repository URL <span class="text-danger">*</span></label>
                     <div class="input-group">
-                        <input @bind="request.GitUrl" class="form-control" placeholder="https://github.com/owner/repo.git" />
+                        <input @bind="request.GitUrl" @bind:event="oninput" class="form-control" placeholder="https://github.com/owner/repo.git" />
                         <button class="btn btn-outline-primary" type="button" @onclick="FetchBranchesAsync" disabled="@isFetchingBranches">
                             @if (isFetchingBranches)
                             {
@@ -72,7 +73,7 @@
             <!-- Rule Selection Panel -->
             <div class="mb-3">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <label class="form-label fw-bold mb-0">Active AST Analysis Rules</label>
+                    <label class="form-label fw-bold mb-0">Active AST Analysis Rules (@RuleRegistry.AvailableRules.Count Total)</label>
                     <div>
                         <button class="btn btn-sm btn-outline-secondary me-1" @onclick="SelectAllRules">Select All</button>
                         <button class="btn btn-sm btn-outline-secondary" @onclick="DeselectAllRules">Clear All</button>
@@ -108,7 +109,7 @@
                 <div class="col-md-6">
                     <label class="form-label fw-bold mb-1">Max AI Reviews per Scan: <span class="text-primary">@request.MaxAiEvaluations</span></label>
                     <input type="range" class="form-range" min="1" max="20" @bind="request.MaxAiEvaluations" />
-                    <small class="text-muted d-block">Caps QBurst Gateway AI analysis to the top flagged items.</small>
+                    <small class="text-muted d-block">Caps QBurst Gateway AI analysis to top flagged items.</small>
                 </div>
                 <div class="col-md-6 text-end">
                     <button class="btn btn-success btn-lg px-4" @onclick="StartScanAsync" disabled="@isScanning">
@@ -147,14 +148,17 @@
         </div>
     }
 
-    <!-- Live Discovered Anti-Patterns -->
+    <!-- Live Discovered Anti-Patterns & Export Suite -->
     @if (discoveredIssues.Any())
     {
         <div class="d-flex align-items-center justify-content-between mb-3">
             <h4 class="mb-0">Discovered Anti-Patterns (@discoveredIssues.Count)</h4>
-            <div>
-                <button class="btn btn-outline-primary btn-sm me-2" @onclick="DownloadHtmlReport" disabled="@string.IsNullOrEmpty(generatedHtmlReport)">
-                    📥 Download HTML Report
+            <div class="btn-group" role="group">
+                <button class="btn btn-outline-danger btn-sm" @onclick="DownloadPdfReport">
+                    📄 Download PDF
+                </button>
+                <button class="btn btn-outline-primary btn-sm" @onclick="DownloadHtmlReport" disabled="@string.IsNullOrEmpty(generatedHtmlReport)">
+                    📥 Download HTML
                 </button>
                 <button class="btn btn-outline-secondary btn-sm" @onclick="CopyMarkdownReport" disabled="@string.IsNullOrEmpty(generatedMarkdownReport)">
                     📋 Copy Markdown
@@ -165,12 +169,13 @@
         <div class="row g-3">
             @foreach (var issue in discoveredIssues)
             {
+                var severity = GetSeverityForRule(issue.RuleId);
                 <div class="col-12">
-                    <div class="card shadow-sm border-start border-4 border-warning">
+                    <div class="card shadow-sm border-start border-4 @(severity == RuleSeverity.Critical ? "border-danger" : severity == RuleSeverity.Warning ? "border-warning" : "border-info")">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h5 class="card-title mb-0 text-danger">
-                                    <span class="badge bg-danger me-2">@issue.RuleId</span>
+                                <h5 class="card-title mb-0 text-dark fw-bold">
+                                    <span class="badge @GetSeverityBadgeClass(severity) me-2">@issue.RuleId</span>
                                     @issue.RuleName
                                 </h5>
                                 <span class="text-muted small">Line @issue.LineNumber</span>
@@ -178,9 +183,34 @@
 
                             <p class="mb-2 text-muted">📁 <code>@issue.FilePath</code></p>
 
+                            <!-- Code Snippet -->
                             <div class="bg-dark text-light p-3 rounded mb-3">
-                                <pre class="m-0"><code>@issue.Snippet</code></pre>
+                                <pre class="m-0" style="white-space: pre-wrap;"><code>@issue.Snippet</code></pre>
                             </div>
+
+                            <!-- Day 4: Sandbox & Benchmark Metrics -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <div class="p-2 border rounded bg-light text-center">
+                                        <small class="text-muted d-block">Estimated Memory Impact</small>
+                                        <strong class="text-danger">@((issue.EstimatedAllocatedBytes / 1024.0).ToString("N1")) KB</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-2 border rounded bg-light text-center">
+                                        <small class="text-muted d-block">Est. Execution Time</small>
+                                        <strong class="text-warning">@issue.ExecutionTimeMs.ToString("F2") ms</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(issue.SimulatedSql))
+                            {
+                                <div class="border rounded p-3 mb-3 bg-light">
+                                    <h6 class="fw-bold text-primary mb-2">⚡ Simulated SQL Translation</h6>
+                                    <pre class="m-0 text-dark small"><code>@issue.SimulatedSql</code></pre>
+                                </div>
+                            }
 
                             @if (!string.IsNullOrWhiteSpace(issue.AiAnalysis))
                             {
@@ -298,14 +328,22 @@
         try
         {
             // Execute scan and capture result
-            var result = await Orchestrator.ExecuteScanAsync(request, progress =>
+            var result = await Orchestrator.ExecuteScanAsync(request, async progress =>
             {
                 latestProgress = progress;
-                if (progress.LatestIssue != null && !discoveredIssues.Contains(progress.LatestIssue))
+                if (progress.LatestIssue != null)
                 {
-                    discoveredIssues.Add(progress.LatestIssue);
+                    bool exists = discoveredIssues.Any(i => 
+                        i.RuleId == progress.LatestIssue.RuleId && 
+                        i.FilePath == progress.LatestIssue.FilePath && 
+                        i.LineNumber == progress.LatestIssue.LineNumber);
+
+                    if (!exists)
+                    {
+                        discoveredIssues.Add(progress.LatestIssue);
+                    }
                 }
-                InvokeAsync(StateHasChanged);
+                await InvokeAsync(StateHasChanged);
             });
 
             // Store reports for download buttons
@@ -337,6 +375,29 @@
         {
             await JS.InvokeVoidAsync("copyToClipboard", generatedMarkdownReport);
         }
+    }
+
+    private async Task DownloadPdfReport()
+    {
+        if (discoveredIssues.Any())
+        {
+            try
+            {
+                byte[] pdfBytes = PdfExportAgent.GeneratePdfReport(request, discoveredIssues);
+                string base64 = Convert.ToBase64String(pdfBytes);
+                await JS.InvokeVoidAsync("downloadFileFromBase64", "LINQ_Performance_Report.pdf", base64, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PDF Export Error: {ex.Message}");
+            }
+        }
+    }
+
+    private RuleSeverity GetSeverityForRule(string ruleId)
+    {
+        var rule = RuleRegistry.AvailableRules.FirstOrDefault(r => r.Id == ruleId);
+        return rule?.Severity ?? RuleSeverity.Warning;
     }
 
     private string GetSeverityBadgeClass(RuleSeverity severity) => severity switch

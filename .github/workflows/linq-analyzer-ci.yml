@@ -1,0 +1,39 @@
+name: LINQ & EF Core Analyzer CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore
+
+    - name: Build Solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run CLI Analyzer Scan
+      run: |
+        dotnet run --project src/Presentation/LINQAnalyzer.CLI/LINQAnalyzer.CLI.csproj -- \
+          --repo https://github.com/dotnet/eShop.git \
+          --branch main \
+          --output ./ci-reports
+
+    - name: Upload Scan Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: linq-performance-reports
+        path: ./ci-reports/

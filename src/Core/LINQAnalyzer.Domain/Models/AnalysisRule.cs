@@ -39,21 +39,63 @@ public static class RuleRegistry
         new AnalysisRule(
             "LINQ002",
             "Premature ToList() / ToArray() Execution",
-            "Materializing a query into memory before applying Where/Select filters prevents query optimization and increases heap allocations.",
+            "Materializing a query into memory before applying Where/Select filters prevents query optimization.",
             RuleCategory.LINQ,
+            RuleSeverity.Critical
+        ),
+        new AnalysisRule(
+            "LINQ003",
+            "Missing Projection (.Select)",
+            "Fetching full entity objects when only specific fields are needed increases heap allocations.",
+            RuleCategory.LINQ,
+            RuleSeverity.Warning
+        ),
+        new AnalysisRule(
+            "LINQ004",
+            "Unfiltered In-Memory Query",
+            "Filtering via .Where() occurs after materializing data into memory (.ToList/.AsEnumerable), downloading unnecessary rows.",
+            RuleCategory.Memory,
             RuleSeverity.Critical
         ),
         new AnalysisRule(
             "EF001",
             "Missing AsNoTracking() in Read-Only Query",
-            "Queries executed for read-only purposes without .AsNoTracking() incur unnecessary Entity Framework change tracking overhead.",
+            "Queries executed for read-only purposes without .AsNoTracking() incur unnecessary EF change tracking overhead.",
             RuleCategory.EntityFramework,
             RuleSeverity.Warning
         ),
         new AnalysisRule(
             "EF002",
             "N+1 Query Pattern in Foreach Loop",
-            "Executing database queries or lazy-loaded navigation properties inside a loop causes severe network roundtrip latency.",
+            "Executing database queries or lazy-loaded navigation properties inside a loop causes severe network latency.",
+            RuleCategory.EntityFramework,
+            RuleSeverity.Critical
+        ),
+        new AnalysisRule(
+            "EF003",
+            "Excessive / Deep .Include() Chain",
+            "Query contains 3 or more .Include() / .ThenInclude() calls, which can cause massive SQL join payload overhead.",
+            RuleCategory.EntityFramework,
+            RuleSeverity.Warning
+        ),
+        new AnalysisRule(
+            "EF004",
+            "Synchronous DB Call in Async Method",
+            "Executing synchronous EF methods like .ToList() or .FirstOrDefault() inside async methods blocks threads.",
+            RuleCategory.EntityFramework,
+            RuleSeverity.Warning
+        ),
+        new AnalysisRule(
+            "EF005",
+            "Cartesian Explosion Risk",
+            "Including multiple collection navigation properties in a single query creates duplicate row multiplication in SQL results.",
+            RuleCategory.EntityFramework,
+            RuleSeverity.Critical
+        ),
+        new AnalysisRule(
+            "EF006",
+            "Client-Side Evaluation Trap",
+            "Calling custom C# methods inside LINQ predicates forces EF Core to evaluate filters row-by-row on the client.",
             RuleCategory.EntityFramework,
             RuleSeverity.Critical
         )
