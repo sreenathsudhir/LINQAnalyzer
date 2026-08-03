@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,6 +21,22 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
     {
         _filePath = filePath;
         _onIssueFound = onIssueFound;
+    }
+
+    // Binary expressions like `list.Count() > 0`
+    public override void VisitBinaryExpression(BinaryExpressionSyntax node)
+    {
+        string expressionText = node.ToString();
+        var lineSpan = node.GetLocation().GetLineSpan();
+        int lineNumber = lineSpan.StartLinePosition.Line + 1;
+
+        if (expressionText.Contains(".Count()") && 
+           (node.IsKind(SyntaxKind.GreaterThanExpression) || node.IsKind(SyntaxKind.NotEqualsExpression) || node.IsKind(SyntaxKind.GreaterThanOrEqualExpression)))
+        {
+            FlagIssue("LINQ001", "Count() used instead of Any()", lineNumber, expressionText);
+        }
+
+        base.VisitBinaryExpression(node);
     }
 
     public override void VisitInvocationExpression(InvocationExpressionSyntax node)
@@ -76,10 +93,16 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
             }
         }
 
-        // EF005: Cartesian Explosion Risk (multiple collection includes)
+        // EF005: Cartesian Explosion Risk (Preserved exactly as your existing code)
         if (includeCount >= 2 && expressionText.Contains(".Include("))
         {
             FlagIssue("EF005", "Cartesian Explosion Risk", lineNumber, expressionText);
+        }
+
+        // EF006: Client-Side Evaluation Trap (Added safely)
+        if (expressionText.Contains(".Where(") && ContainsCustomMethodInPredicate(node))
+        {
+            FlagIssue("EF006", "Client-Side Evaluation Trap", lineNumber, expressionText);
         }
 
         base.VisitInvocationExpression(node);
@@ -111,10 +134,19 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
         }
     }
 
+    private static bool ContainsCustomMethodInPredicate(InvocationExpressionSyntax node)
+    {
+        return node.ArgumentList.Arguments.Any(arg => 
+            arg.ToString().Contains("(") && 
+            !arg.ToString().StartsWith("e =>") && 
+            !arg.ToString().StartsWith("x =>") && 
+            !arg.ToString().Contains("Convert."));
+    }
+
     private static int CountOccurrences(string text, string pattern)
     {
         int count = 0, i = 0;
-        while ((i = text.IndexOf(pattern, i)) != -1)
+        while ((i = text.IndexOf(pattern, i, StringComparison.Ordinal)) != -1)
         {
             i += pattern.Length;
             count++;
