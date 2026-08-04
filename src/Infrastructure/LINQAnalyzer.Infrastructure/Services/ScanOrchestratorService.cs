@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LINQAnalyzer.Application.Interfaces;
@@ -16,7 +17,7 @@ public class ScanOrchestratorService
     private readonly IPerformanceAnalysisAgent _analysisAgent;
     private readonly IAiReviewAgent _aiReviewAgent;
     private readonly IDocumentationAgent _documentationAgent;
-    private readonly IBenchmarkAgent _benchmarkAgent; // Day 4
+    private readonly IBenchmarkAgent _benchmarkAgent;
 
     public ScanOrchestratorService(
         ICodeDiscoveryAgent discoveryAgent,
@@ -52,7 +53,7 @@ public class ScanOrchestratorService
                 issue => onProgress(new ScanProgress(request.Id, ScanStage.ParsingRoslynAst, 55, $"Flagged issue in {issue.FilePath}", issue)),
                 cancellationToken);
 
-            // Stage 2.5: Benchmark Engine (Day 4 Execution Sandbox)
+            // Stage 2.5: Benchmark Engine (Execution Sandbox)
             if (issues.Count > 0)
             {
                 onProgress(new ScanProgress(request.Id, ScanStage.ParsingRoslynAst, 60, "Running execution sandbox & SQL simulations..."));
@@ -67,12 +68,33 @@ public class ScanOrchestratorService
             }
 
             // Stage 3: Agent 3 - AI Review (QBurst Gateway)
-            onProgress(new ScanProgress(request.Id, ScanStage.RunningAiAnalysis, 75, "Running AI performance reviews..."));
-            int evaluationsCount = Math.Min(issues.Count, request.MaxAiEvaluations);
-            for (int i = 0; i < evaluationsCount; i++)
+            if (issues.Count > 0)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                issues[i].AiAnalysis = await _aiReviewAgent.AnalyzeIssueAsync(issues[i], cancellationToken);
+                onProgress(new ScanProgress(request.Id, ScanStage.RunningAiAnalysis, 75, "Running AI performance reviews..."));
+
+                // Dynamic sizing: If MaxAiEvaluations <= 0, process ALL issues dynamically.
+                // Otherwise, take up to MaxAiEvaluations.
+                var issuesToAnalyze = (request.MaxAiEvaluations <= 0) 
+                    ? issues 
+                    : issues.Take(request.MaxAiEvaluations).ToList();
+
+                // Process AI calls in parallel to maximize throughput & push updates to UI
+                int completedAiCount = 0;
+                var aiTasks = issuesToAnalyze.Select(async issue =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    issue.AiAnalysis = await _aiReviewAgent.AnalyzeIssueAsync(issue, cancellationToken);
+                    
+                    int currentCount = Interlocked.Increment(ref completedAiCount);
+                    onProgress(new ScanProgress(
+                        request.Id, 
+                        ScanStage.RunningAiAnalysis, 
+                        75 + (int)((currentCount / (double)issuesToAnalyze.Count) * 10), 
+                        $"Completed AI analysis for issue {currentCount} of {issuesToAnalyze.Count}", 
+                        issue));
+                });
+
+                await Task.WhenAll(aiTasks);
             }
 
             // Stage 4: Agent 6 - Report Generation

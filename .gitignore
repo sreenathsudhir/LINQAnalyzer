@@ -11,3 +11,7 @@
 
 ## Temporary clone directories created by Agent 1
 **/LINQScan_*
+
+## Environment & Local Secrets
+.env
+*.local.json
