@@ -2,6 +2,7 @@
 @using LINQAnalyzer.Domain.Models
 @using LINQAnalyzer.Infrastructure.Services
 @using Microsoft.AspNetCore.Components.Web
+@using Markdig
 @inject ScanOrchestratorService Orchestrator
 @inject IJSRuntime JS
 @inject LINQAnalyzer.Application.Interfaces.IDocumentationAgent DocumentationAgent
@@ -107,9 +108,14 @@
             <!-- AI Settings & Launch Button -->
             <div class="row align-items-center g-3">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold mb-1">Max AI Reviews per Scan: <span class="text-primary">@request.MaxAiEvaluations</span></label>
-                    <input type="range" class="form-range" min="1" max="20" @bind="request.MaxAiEvaluations" />
-                    <small class="text-muted d-block">Caps QBurst Gateway AI analysis to top flagged items.</small>
+                    <label class="form-label fw-bold mb-1">
+                        Max AI Reviews per Scan: 
+                        <span class="text-primary fw-bold">
+                            @(request.MaxAiEvaluations <= 0 ? "All Discovered Issues (Dynamic)" : request.MaxAiEvaluations.ToString())
+                        </span>
+                    </label>
+                    <input type="range" class="form-range" min="0" max="50" step="5" @bind="request.MaxAiEvaluations" />
+                    <small class="text-muted d-block">Set to 0 to dynamically analyze every single issue found.</small>
                 </div>
                 <div class="col-md-6 text-end">
                     <button class="btn btn-success btn-lg px-4" @onclick="StartScanAsync" disabled="@isScanning">
@@ -215,9 +221,9 @@
                             @if (!string.IsNullOrWhiteSpace(issue.AiAnalysis))
                             {
                                 <div class="bg-light border rounded p-3 mt-2">
-                                    <h6 class="fw-bold text-success">🤖 AI Optimization Guidance (QBurst Gateway)</h6>
-                                    <div class="text-dark small">
-                                        @((MarkupString)issue.AiAnalysis.Replace("\n", "<br/>"))
+                                    <h6 class="fw-bold text-success mb-3">🤖 AI Optimization Guidance (QBurst Gateway)</h6>
+                                    <div class="text-dark small ai-markdown-container">
+                                        @((MarkupString)Markdown.ToHtml(issue.AiAnalysis, markdownPipeline))
                                     </div>
                                 </div>
                             }
@@ -244,8 +250,16 @@
     private bool isFetchingBranches = false;
     private string? branchFetchError = null;
 
+    // Markdig Pipeline configuration
+    private readonly MarkdownPipeline markdownPipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .Build();
+
     protected override void OnInitialized()
     {
+        // Dynamic Mode Default (0 = Analyze 100% of discovered issues)
+        request.MaxAiEvaluations = 0;
+
         // Default all available rules to selected
         foreach (var rule in RuleRegistry.AvailableRules)
         {
@@ -333,14 +347,22 @@
                 latestProgress = progress;
                 if (progress.LatestIssue != null)
                 {
-                    bool exists = discoveredIssues.Any(i => 
+                    var existing = discoveredIssues.FirstOrDefault(i => 
                         i.RuleId == progress.LatestIssue.RuleId && 
                         i.FilePath == progress.LatestIssue.FilePath && 
                         i.LineNumber == progress.LatestIssue.LineNumber);
 
-                    if (!exists)
+                    if (existing == null)
                     {
                         discoveredIssues.Add(progress.LatestIssue);
+                    }
+                    else
+                    {
+                        // Sync incoming AI analysis update dynamically to UI card
+                        if (!string.IsNullOrEmpty(progress.LatestIssue.AiAnalysis))
+                        {
+                            existing.AiAnalysis = progress.LatestIssue.AiAnalysis;
+                        }
                     }
                 }
                 await InvokeAsync(StateHasChanged);

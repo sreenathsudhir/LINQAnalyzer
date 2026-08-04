@@ -11,6 +11,11 @@ public class ScanRequest
     public string? PersonalAccessToken { get; set; }
     public string? TargetFolderPath { get; set; }
     public List<string> SelectedRuleIds { get; set; } = new();
-    public int MaxAiEvaluations { get; set; } = 5;
+    
+    /// <summary>
+    /// Set to 0 for dynamic evaluation (analyzes 100% of discovered issues).
+    /// </summary>
+    public int MaxAiEvaluations { get; set; } = 0;
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

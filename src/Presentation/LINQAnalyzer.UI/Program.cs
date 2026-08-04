@@ -19,11 +19,9 @@ builder.Services.AddScoped<ICodeDiscoveryAgent, CodeDiscoveryAgent>();
 // Agent 2: Performance Analyzer (Roslyn AST Engine)
 builder.Services.AddScoped<IPerformanceAnalysisAgent, PerformanceAnalysisAgent>();
 
-// Agent 3: AI Review Agent (QBurst Gateway)
-builder.Services.AddHttpClient<IAiReviewAgent, AiReviewAgent>(client =>
+// Agent 3: AI Review Agent (Groq LLM Integration)
+builder.Services.AddHttpClient<IAiReviewAgent, AiPerformanceReviewAgent>(client =>
 {
-    var gatewayUrl = builder.Configuration["QBurstGateway:BaseUrl"] ?? "http://localhost:5000/";
-    client.BaseAddress = new Uri(gatewayUrl);
     client.Timeout = TimeSpan.FromSeconds(60);
 });
 
