@@ -14,12 +14,17 @@ namespace LINQAnalyzer.Infrastructure.RoslynRules;
 public class LinqPerformanceWalker : CSharpSyntaxWalker
 {
     private readonly string _filePath;
+    private readonly List<string> _activeRuleIds;
     private readonly Action<DiscoveredIssue> _onIssueFound;
     private readonly HashSet<string> _flaggedRulesPerLine = new();
 
-    public LinqPerformanceWalker(string filePath, Action<DiscoveredIssue> onIssueFound)
+    public LinqPerformanceWalker(
+        string filePath, 
+        List<string> activeRuleIds, 
+        Action<DiscoveredIssue> onIssueFound)
     {
         _filePath = filePath;
+        _activeRuleIds = activeRuleIds ?? new List<string>();
         _onIssueFound = onIssueFound;
     }
 
@@ -30,10 +35,11 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
         var lineSpan = node.GetLocation().GetLineSpan();
         int lineNumber = lineSpan.StartLinePosition.Line + 1;
 
-        if (expressionText.Contains(".Count()") && 
+        if (IsRuleActive("LINQ001") &&
+            expressionText.Contains(".Count()") && 
            (node.IsKind(SyntaxKind.GreaterThanExpression) || node.IsKind(SyntaxKind.NotEqualsExpression) || node.IsKind(SyntaxKind.GreaterThanOrEqualExpression)))
         {
-            FlagIssue("LINQ001", "Count() used instead of Any()", lineNumber, expressionText);
+            FlagIssue("LINQ001", "Count() used instead of Any() for existence checks", lineNumber, expressionText);
         }
 
         base.VisitBinaryExpression(node);
@@ -46,46 +52,51 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
         int lineNumber = lineSpan.StartLinePosition.Line + 1;
 
         // LINQ001: Count() vs Any()
-        if (expressionText.Contains(".Count()") && (expressionText.Contains("> 0") || expressionText.Contains("!= 0") || expressionText.Contains(">= 1")))
+        if (IsRuleActive("LINQ001") && 
+            expressionText.Contains(".Count()") && (expressionText.Contains("> 0") || expressionText.Contains("!= 0") || expressionText.Contains(">= 1")))
         {
-            FlagIssue("LINQ001", "Count() used instead of Any()", lineNumber, expressionText);
+            FlagIssue("LINQ001", "Count() used instead of Any() for existence checks", lineNumber, expressionText);
         }
 
         // LINQ002: Premature ToList() / ToArray() Execution
-        if (expressionText.Contains(".ToList().Where(") || expressionText.Contains(".ToArray().Where("))
+        if (IsRuleActive("LINQ002") && 
+            (expressionText.Contains(".ToList().Where(") || expressionText.Contains(".ToArray().Where(")))
         {
             FlagIssue("LINQ002", "Premature ToList() / ToArray() Execution", lineNumber, expressionText);
         }
 
-        // LINQ003: Missing Projection (.Select) before ToList/ToListAsync
-        if ((expressionText.Contains(".ToList()") || expressionText.Contains(".ToListAsync()")) && !expressionText.Contains(".Select("))
+        // LINQ003: Missing Projection (.Select)
+        if (IsRuleActive("LINQ003") && 
+            (expressionText.Contains(".ToList()") || expressionText.Contains(".ToListAsync()")) && !expressionText.Contains(".Select("))
         {
             FlagIssue("LINQ003", "Missing Projection (.Select)", lineNumber, expressionText);
         }
 
-        // LINQ004: Unfiltered In-Memory Query
-        if (expressionText.Contains(".AsEnumerable().Where(") || expressionText.Contains(".ToList().Where("))
+        // LINQ004: Multiple Enumeration / Unfiltered In-Memory Query
+        if (IsRuleActive("LINQ004") && 
+            (expressionText.Contains(".AsEnumerable().Where(") || expressionText.Contains(".ToList().Where(")))
         {
-            FlagIssue("LINQ004", "Unfiltered In-Memory Query", lineNumber, expressionText);
+            FlagIssue("LINQ004", "Multiple Enumeration / Unfiltered In-Memory Query", lineNumber, expressionText);
         }
 
         // EF001: Missing AsNoTracking() in Query Chain
-        if ((expressionText.Contains(".ToListAsync()") || expressionText.Contains(".FirstOrDefaultAsync()") || expressionText.Contains(".ToList()"))
+        if (IsRuleActive("EF001") && 
+            (expressionText.Contains(".ToListAsync()") || expressionText.Contains(".FirstOrDefaultAsync()") || expressionText.Contains(".ToList()"))
             && !expressionText.Contains(".AsNoTracking()"))
         {
             FlagIssue("EF001", "Missing AsNoTracking() in Read-Only Query", lineNumber, expressionText);
         }
 
-        // EF003: Excessive / Deep .Include() Chain (3 or more)
+        // EF003: Excessive / Deep .Include() Chain (Cartesian Explosion Risk)
         int includeCount = CountOccurrences(expressionText, ".Include(") + CountOccurrences(expressionText, ".ThenInclude(");
-        if (includeCount >= 3)
+        if (IsRuleActive("EF003") && includeCount >= 2)
         {
-            FlagIssue("EF003", "Excessive / Deep .Include() Chain", lineNumber, expressionText);
+            FlagIssue("EF003", "Excessive .Include() Chain / Cartesian Explosion Risk", lineNumber, expressionText);
         }
 
         // EF004: Synchronous DB Call in Async Context
         var containingMethod = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-        if (containingMethod != null && containingMethod.Modifiers.Any(SyntaxKind.AsyncKeyword))
+        if (IsRuleActive("EF004") && containingMethod != null && containingMethod.Modifiers.Any(SyntaxKind.AsyncKeyword))
         {
             if (expressionText.EndsWith(".ToList()") || expressionText.EndsWith(".FirstOrDefault()") || expressionText.EndsWith(".SingleOrDefault()") || expressionText.EndsWith(".Count()"))
             {
@@ -93,16 +104,10 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
             }
         }
 
-        // EF005: Cartesian Explosion Risk (Preserved exactly as your existing code)
-        if (includeCount >= 2 && expressionText.Contains(".Include("))
+        // EF005: Client-Side Evaluation Trap
+        if (IsRuleActive("EF005") && expressionText.Contains(".Where(") && ContainsCustomMethodInPredicate(node))
         {
-            FlagIssue("EF005", "Cartesian Explosion Risk", lineNumber, expressionText);
-        }
-
-        // EF006: Client-Side Evaluation Trap (Added safely)
-        if (expressionText.Contains(".Where(") && ContainsCustomMethodInPredicate(node))
-        {
-            FlagIssue("EF006", "Client-Side Evaluation Trap", lineNumber, expressionText);
+            FlagIssue("EF005", "Client-Side Evaluation Trap", lineNumber, expressionText);
         }
 
         base.VisitInvocationExpression(node);
@@ -115,12 +120,44 @@ public class LinqPerformanceWalker : CSharpSyntaxWalker
         int lineNumber = lineSpan.StartLinePosition.Line + 1;
 
         // EF002: N+1 Query Pattern in Foreach Loop
-        if (statementText.Contains(".FirstOrDefault(") || statementText.Contains(".Where(") || statementText.Contains(".ToList(") || statementText.Contains(".Find("))
+        if (IsRuleActive("EF002") && 
+            (statementText.Contains(".FirstOrDefault(") || statementText.Contains(".Where(") || statementText.Contains(".ToList(") || statementText.Contains(".Find(")))
         {
             FlagIssue("EF002", "N+1 Query Pattern in Foreach Loop", lineNumber, statementText);
         }
 
         base.VisitForEachStatement(node);
+    }
+
+    // LINQ005: LINQ Calls Inside Loop Conditions/Bodies
+    public override void VisitForStatement(ForStatementSyntax node)
+    {
+        CheckLoopConditionForLinq("LINQ005", node.Condition?.ToString(), node.GetLocation());
+        base.VisitForStatement(node);
+    }
+
+    public override void VisitWhileStatement(WhileStatementSyntax node)
+    {
+        CheckLoopConditionForLinq("LINQ005", node.Condition?.ToString(), node.GetLocation());
+        base.VisitWhileStatement(node);
+    }
+
+    private void CheckLoopConditionForLinq(string ruleId, string? conditionText, Location location)
+    {
+        if (IsRuleActive(ruleId) && !string.IsNullOrEmpty(conditionText))
+        {
+            if (conditionText.Contains(".Count()") || conditionText.Contains(".Any()") || conditionText.Contains(".Where("))
+            {
+                int lineNumber = location.GetLineSpan().StartLinePosition.Line + 1;
+                FlagIssue(ruleId, "Repeated LINQ Evaluation in Loop Condition", lineNumber, conditionText);
+            }
+        }
+    }
+
+    private bool IsRuleActive(string ruleId)
+    {
+
+        return _activeRuleIds.Count == 0 || _activeRuleIds.Contains(ruleId, StringComparer.OrdinalIgnoreCase);
     }
 
     private void FlagIssue(string ruleId, string ruleName, int lineNumber, string snippet)

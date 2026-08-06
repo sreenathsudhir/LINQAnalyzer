@@ -52,9 +52,16 @@ public static class RuleRegistry
         ),
         new AnalysisRule(
             "LINQ004",
-            "Unfiltered In-Memory Query",
+            "Multiple Enumeration / Unfiltered Query",
             "Filtering via .Where() occurs after materializing data into memory (.ToList/.AsEnumerable), downloading unnecessary rows.",
             RuleCategory.Memory,
+            RuleSeverity.Critical
+        ),
+        new AnalysisRule(
+            "LINQ005",
+            "Repeated LINQ Evaluation in Loop Condition",
+            "LINQ expressions evaluated inside for/while loop condition headers execute repeatedly on every loop iteration.",
+            RuleCategory.LINQ,
             RuleSeverity.Critical
         ),
         new AnalysisRule(
@@ -74,9 +81,9 @@ public static class RuleRegistry
         new AnalysisRule(
             "EF003",
             "Excessive / Deep .Include() Chain",
-            "Query contains 3 or more .Include() / .ThenInclude() calls, which can cause massive SQL join payload overhead.",
+            "Query contains multiple .Include() / .ThenInclude() calls, which can cause massive SQL join payload overhead.",
             RuleCategory.EntityFramework,
-            RuleSeverity.Warning
+            RuleSeverity.Critical
         ),
         new AnalysisRule(
             "EF004",
@@ -87,13 +94,6 @@ public static class RuleRegistry
         ),
         new AnalysisRule(
             "EF005",
-            "Cartesian Explosion Risk",
-            "Including multiple collection navigation properties in a single query creates duplicate row multiplication in SQL results.",
-            RuleCategory.EntityFramework,
-            RuleSeverity.Critical
-        ),
-        new AnalysisRule(
-            "EF006",
             "Client-Side Evaluation Trap",
             "Calling custom C# methods inside LINQ predicates forces EF Core to evaluate filters row-by-row on the client.",
             RuleCategory.EntityFramework,
