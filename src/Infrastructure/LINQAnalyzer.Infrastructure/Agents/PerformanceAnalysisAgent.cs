@@ -20,8 +20,8 @@ public class PerformanceAnalysisAgent : IPerformanceAnalysisAgent
     /// Iterates through C# files, parses syntax trees, and invokes the AST Walker.
     /// </summary>
     /// <param name="localPath">Root path of cloned source code.</param>
-    /// <param name="activeRuleIds">Selected rules from the UI form (used for filtering rules in V1/V2).</param>
-    /// <param name="onIssueFound">Real-time callback streamed back to UI via SignalR.</param>
+    /// <param name="activeRuleIds">Selected rules from the UI form used for rule filtering.</param>
+    /// <param name="onIssueFound">Real-time callback streamed back to UI.</param>
     /// <param name="cancellationToken">Cancellation token for async operations.</param>
     /// <returns>A full list of all discovered issues across the repository.</returns>
     public async Task<List<DiscoveredIssue>> AnalyzeCodebaseAsync(
@@ -55,11 +55,11 @@ public class PerformanceAnalysisAgent : IPerformanceAnalysisAgent
 
             string relativePath = Path.GetRelativePath(localPath, filePath);
 
-            // Instantiate AST Walker and stream issues as they are found
-            var walker = new LinqPerformanceWalker(relativePath, issue =>
+            // Instantiate AST Walker passing activeRuleIds filter
+            var walker = new LinqPerformanceWalker(relativePath, activeRuleIds, issue =>
             {
                 discoveredIssues.Add(issue);
-                onIssueFound(issue); // Triggers real-time SignalR progress update
+                onIssueFound(issue);
             });
 
             walker.Visit(root);
