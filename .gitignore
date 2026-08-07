@@ -15,3 +15,9 @@
 ## Environment & Local Secrets
 .env
 *.local.json
+.env.*
+!.env.example
+# Ignore local environment secret files
+.env
+.env.*
+!.env.example

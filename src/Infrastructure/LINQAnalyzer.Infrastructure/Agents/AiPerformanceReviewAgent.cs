@@ -11,32 +11,45 @@ using Microsoft.Extensions.Configuration;
 
 namespace LINQAnalyzer.Infrastructure.Agents;
 
+/// <summary>
+/// Agent 3: Evaluates performance anti-patterns using a generic OpenAI-compatible LLM Gateway API.
+/// </summary>
 public class AiPerformanceReviewAgent : IAiReviewAgent
 {
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
+    private readonly string _baseUrl;
+    private readonly string _model;
 
     public AiPerformanceReviewAgent(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
 
-        // Fallback chain:
-        // 1. GROQ_API_KEY environment variable
-        // 2. Groq:ApiKey from User Secrets or appsettings.json
-        _apiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY")
-                  ?? configuration["Groq:ApiKey"]
+        // Strictly generic environment and configuration resolution
+        _apiKey = Environment.GetEnvironmentVariable("LLM_API_KEY")
+                  ?? Environment.GetEnvironmentVariable("LlmSettings__ApiKey")
+                  ?? configuration["LlmSettings:ApiKey"]
+                  ?? configuration["LLM_API_KEY"]
                   ?? string.Empty;
+
+        _baseUrl = Environment.GetEnvironmentVariable("LLM_BASE_URL")
+                   ?? Environment.GetEnvironmentVariable("LlmSettings__BaseUrl")
+                   ?? configuration["LlmSettings:BaseUrl"]
+                   ?? configuration["LLM_BASE_URL"]
+                   ?? string.Empty;
+
+        _model = Environment.GetEnvironmentVariable("LLM_MODEL")
+                 ?? Environment.GetEnvironmentVariable("LlmSettings__Model")
+                 ?? configuration["LlmSettings:Model"]
+                 ?? configuration["LLM_MODEL"]
+                 ?? "gpt-4o-mini";
     }
 
-    /// <summary>
-    /// Orchestrator entry point required by IAiReviewAgent.
-    /// Analyzes a discovered issue and returns a clean, formatted AI summary string.
-    /// </summary>
     public async Task<string> AnalyzeIssueAsync(DiscoveredIssue issue, CancellationToken cancellationToken = default)
     {
         var reviewResult = await ReviewIssueInternalAsync(issue, cancellationToken);
 
-        if (!string.IsNullOrEmpty(reviewResult.RootCause) && reviewResult.RootCause.StartsWith("GROQ_API_KEY"))
+        if (!string.IsNullOrEmpty(reviewResult.RootCause) && reviewResult.RootCause.Contains("LLM_API_KEY is not configured"))
         {
             return reviewResult.RootCause;
         }
@@ -51,19 +64,16 @@ public class AiPerformanceReviewAgent : IAiReviewAgent
                reviewResult.Recommendation;
     }
 
-    /// <summary>
-    /// Sends prompt to Groq LLM and deserializes JSON response into AiReviewResult.
-    /// </summary>
     private async Task<AiReviewResult> ReviewIssueInternalAsync(DiscoveredIssue issue, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(_apiKey))
+        if (string.IsNullOrWhiteSpace(_apiKey))
         {
             return new AiReviewResult
             {
                 RuleId = issue.RuleId,
-                RootCause = "GROQ_API_KEY is not configured in environment variables or User Secrets.",
+                RootCause = "LLM_API_KEY is not configured in environment variables (.env) or configuration.",
                 RefactoredCode = issue.Snippet,
-                Recommendation = "Run `dotnet user-secrets set \"Groq:ApiKey\" \"your_key\"` to enable AI reviews."
+                Recommendation = "Add `LLM_API_KEY=your_key` to your local .env file to enable AI reviews."
             };
         }
 
@@ -76,13 +86,18 @@ public class AiPerformanceReviewAgent : IAiReviewAgent
 
         try
         {
-            var requestUri = "https://api.groq.com/openai/v1/chat/completions";
+            // Normalize URL path to safely handle endpoints with or without trailing /chat/completions
+            string baseUrlNormalized = _baseUrl.TrimEnd('/');
+            string requestUri = baseUrlNormalized.EndsWith("/chat/completions", StringComparison.OrdinalIgnoreCase)
+                ? baseUrlNormalized
+                : $"{baseUrlNormalized}/chat/completions";
+
             using var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey.Trim());
 
             var requestBody = new
             {
-                model = "llama-3.3-70b-versatile",
+                model = _model,
                 messages = new[]
                 {
                     new { role = "user", content = prompt }

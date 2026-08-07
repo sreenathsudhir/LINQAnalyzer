@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,21 +17,23 @@ public class CodeDiscoveryAgent : ICodeDiscoveryAgent
 {
     public Task<string> CloneRepositoryAsync(ScanRequest request, CancellationToken cancellationToken = default)
     {
+        string cleanGitUrl = CleanUrl(request.GitUrl);
+        string cleanToken = request.PersonalAccessToken?.Trim() ?? string.Empty;
         string tempDirectory = Path.Combine(Path.GetTempPath(), "LINQScan_" + request.Id.ToString("N"));
 
         var cloneOptions = new CloneOptions
         {
-            BranchName = string.IsNullOrWhiteSpace(request.Branch) ? "main" : request.Branch,
+            BranchName = string.IsNullOrWhiteSpace(request.Branch) ? "main" : request.Branch.Trim(),
             FetchOptions =
             {
                 CredentialsProvider = (_url, _userFromUrl, _types) =>
                 {
-                    if (!string.IsNullOrWhiteSpace(request.PersonalAccessToken))
+                    if (!string.IsNullOrWhiteSpace(cleanToken))
                     {
                         return new UsernamePasswordCredentials
                         {
                             Username = "token",
-                            Password = request.PersonalAccessToken
+                            Password = cleanToken
                         };
                     }
                     return null;
@@ -41,7 +44,7 @@ public class CodeDiscoveryAgent : ICodeDiscoveryAgent
         return Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
-            Repository.Clone(request.GitUrl, tempDirectory, cloneOptions);
+            Repository.Clone(cleanGitUrl, tempDirectory, cloneOptions);
             return tempDirectory;
         }, cancellationToken);
     }
@@ -51,20 +54,23 @@ public class CodeDiscoveryAgent : ICodeDiscoveryAgent
     /// </summary>
     public Task<List<string>> GetRemoteBranchesAsync(string gitUrl, string? personalAccessToken = null, CancellationToken cancellationToken = default)
     {
+        string cleanGitUrl = CleanUrl(gitUrl);
+        string cleanToken = personalAccessToken?.Trim() ?? string.Empty;
+
         return Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var remoteRefs = Repository.ListRemoteReferences(
-                gitUrl,
+                cleanGitUrl,
                 (_url, _userFromUrl, _types) =>
                 {
-                    if (!string.IsNullOrWhiteSpace(personalAccessToken))
+                    if (!string.IsNullOrWhiteSpace(cleanToken))
                     {
                         return new UsernamePasswordCredentials
                         {
                             Username = "token",
-                            Password = personalAccessToken
+                            Password = cleanToken
                         };
                     }
                     return null;
@@ -93,5 +99,18 @@ public class CodeDiscoveryAgent : ICodeDiscoveryAgent
             }
             Directory.Delete(localPath, true);
         }
+    }
+
+    /// <summary>
+    /// Sanitizes Git repository URLs to prevent LibGit2Sharp hostname parsing exceptions.
+    /// </summary>
+    private static string CleanUrl(string? rawUrl)
+    {
+        if (string.IsNullOrWhiteSpace(rawUrl))
+            return string.Empty;
+
+        return rawUrl
+            .Trim()
+            .Trim('"', '\'', ' ', '\t', '\r', '\n');
     }
 }
