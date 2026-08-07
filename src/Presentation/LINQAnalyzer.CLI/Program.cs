@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetEnv;
 using LINQAnalyzer.Application.Interfaces;
 using LINQAnalyzer.Domain.Models;
 using LINQAnalyzer.Infrastructure.Agents;
 using LINQAnalyzer.Infrastructure.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LINQAnalyzer.CLI;
@@ -15,6 +17,17 @@ class Program
 {
     static async Task<int> Main(string[] args)
     {
+        // Load .env and overwrite existing process environment variables
+        string envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+        if (File.Exists(envPath))
+        {
+            Env.Load(envPath, new LoadOptions(clobberExistingVars: true));
+        }
+        else
+        {
+            Env.Load();
+        }
+
         Console.WriteLine("==================================================");
         Console.WriteLine("🚀 LINQ & EF Core Performance Analyzer CLI");
         Console.WriteLine("==================================================\n");
@@ -33,8 +46,33 @@ class Program
             return 1;
         }
 
+        // Build Configuration Container from Generic Environment Variables with Fallbacks
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { 
+                    "LlmSettings:ApiKey", 
+                    Environment.GetEnvironmentVariable("LLM_API_KEY") 
+                    ?? Environment.GetEnvironmentVariable("LlmSettings__ApiKey") 
+                    ?? Environment.GetEnvironmentVariable("GROQ_API_KEY") 
+                },
+                { 
+                    "LlmSettings:BaseUrl", 
+                    Environment.GetEnvironmentVariable("LLM_BASE_URL") 
+                    ?? Environment.GetEnvironmentVariable("LlmSettings__BaseUrl") 
+                },
+                { 
+                    "LlmSettings:Model", 
+                    Environment.GetEnvironmentVariable("LLM_MODEL") 
+                    ?? Environment.GetEnvironmentVariable("LlmSettings__Model") 
+                }
+            })
+            .Build();
+
         // Setup Dependency Injection Container
         var services = new ServiceCollection();
+        services.AddSingleton<IConfiguration>(configuration);
+
         // Agent 1: Code Discovery
         services.AddScoped<ICodeDiscoveryAgent, CodeDiscoveryAgent>();
 
@@ -42,10 +80,9 @@ class Program
         services.AddScoped<IPerformanceAnalysisAgent, PerformanceAnalysisAgent>();
 
         // Agent 3: AI Review Agent
-        services.AddHttpClient<IAiReviewAgent, AiReviewAgent>(client =>
+        services.AddHttpClient<IAiReviewAgent, AiPerformanceReviewAgent>(client =>
         {
-            client.BaseAddress = new Uri("http://localhost:5000/");
-            client.Timeout = TimeSpan.FromSeconds(30);
+            client.Timeout = TimeSpan.FromSeconds(60);
         });
 
         // Agent 4: Documentation Agent
@@ -59,13 +96,6 @@ class Program
 
         // Pipeline Orchestrator
         services.AddScoped<ScanOrchestratorService>();
-
-        // Register HttpClient for AI Agent
-        services.AddHttpClient<IAiReviewAgent, AiReviewAgent>(client =>
-        {
-            client.BaseAddress = new Uri("http://localhost:5000/");
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
 
         var provider = services.BuildServiceProvider();
         var orchestrator = provider.GetRequiredService<ScanOrchestratorService>();

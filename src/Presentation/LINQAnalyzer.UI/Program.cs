@@ -1,42 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using DotNetEnv;
 using LINQAnalyzer.Application.Interfaces;
 using LINQAnalyzer.Infrastructure.Agents;
 using LINQAnalyzer.Infrastructure.Services;
 using LINQAnalyzer.UI.Components;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+// -----------------------------------------------------------------------------
+// 1. Locate and Load Root .env File via Directory Traversal
+// -----------------------------------------------------------------------------
+string currentDir = Directory.GetCurrentDirectory();
+string? envPath = null;
+
+while (!string.IsNullOrEmpty(currentDir))
+{
+    string testPath = Path.Combine(currentDir, ".env");
+    if (File.Exists(testPath))
+    {
+        envPath = testPath;
+        break;
+    }
+    currentDir = Directory.GetParent(currentDir)?.FullName!;
+}
+
+if (!string.IsNullOrEmpty(envPath))
+{
+    Env.Load(envPath, new LoadOptions(clobberExistingVars: true));
+    Console.WriteLine($"[Config] ✅ Loaded .env from: {envPath}");
+}
+else
+{
+    Console.WriteLine("[Config] ⚠️ Warning: .env file not found in directory tree.");
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Blazor server components
+// -----------------------------------------------------------------------------
+// 2. Map Generic LLM Environment Variables to Configuration
+// -----------------------------------------------------------------------------
+builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+{
+    { 
+        "LlmSettings:ApiKey", 
+        Environment.GetEnvironmentVariable("LLM_API_KEY") 
+        ?? Environment.GetEnvironmentVariable("LlmSettings__ApiKey") 
+    },
+    { 
+        "LlmSettings:BaseUrl", 
+        Environment.GetEnvironmentVariable("LLM_BASE_URL") 
+        ?? Environment.GetEnvironmentVariable("LlmSettings__BaseUrl") 
+    },
+    { 
+        "LlmSettings:Model", 
+        Environment.GetEnvironmentVariable("LLM_MODEL") 
+        ?? Environment.GetEnvironmentVariable("LlmSettings__Model") 
+    }
+});
+
+// -----------------------------------------------------------------------------
+// 3. UI & Core Services Registration
+// -----------------------------------------------------------------------------
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// -----------------------------------------------------------------------------
-// Core Engine & Agent Registrations
-// -----------------------------------------------------------------------------
-
-// Agent 1: Code Discovery
+// Agent Registrations
 builder.Services.AddScoped<ICodeDiscoveryAgent, CodeDiscoveryAgent>();
-
-// Agent 2: Performance Analyzer (Roslyn AST Engine)
 builder.Services.AddScoped<IPerformanceAnalysisAgent, PerformanceAnalysisAgent>();
 
-// Agent 3: AI Review Agent (Groq LLM Integration)
 builder.Services.AddHttpClient<IAiReviewAgent, AiPerformanceReviewAgent>(client =>
 {
     client.Timeout = TimeSpan.FromSeconds(60);
 });
 
-// Agent 4: Documentation Agent
 builder.Services.AddScoped<IDocumentationAgent, DocumentationAgent>();
-
-// Agent 5: PDF Export Agent
 builder.Services.AddScoped<IPdfExportAgent, PdfExportAgent>();
-
-// Agent 6: Benchmark Agent
 builder.Services.AddScoped<IBenchmarkAgent, BenchmarkAgent>();
 
 // Pipeline Orchestrator
 builder.Services.AddScoped<ScanOrchestratorService>();
 
+// -----------------------------------------------------------------------------
+// 4. HTTP Pipeline Configuration
+// -----------------------------------------------------------------------------
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
