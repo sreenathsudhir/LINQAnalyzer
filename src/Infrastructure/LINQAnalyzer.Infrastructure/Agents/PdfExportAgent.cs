@@ -62,62 +62,47 @@ public class PdfExportAgent : IPdfExportAgent
 
                     col.Item().Height(15);
 
-                    // Issues Table
+                    // Detailed Issue Breakdown
                     if (!issues.Any())
                     {
                         col.Item().Text("🎉 No performance anti-patterns detected!").FontSize(12).Bold().FontColor(Colors.Green.Medium);
                     }
                     else
                     {
-                        col.Item().Table(table =>
+                        foreach (var issue in issues)
                         {
-                            table.ColumnsDefinition(columns =>
+                            var severity = GetSeverity(issue.RuleId);
+                            string severityColor = severity switch
                             {
-                                columns.ConstantColumn(70);  // Rule ID
-                                columns.RelativeColumn(2);  // Issue & File
-                                columns.ConstantColumn(50);  // Line
-                                columns.ConstantColumn(60);  // Severity
-                            });
+                                RuleSeverity.Critical => Colors.Red.Medium,
+                                RuleSeverity.Warning => Colors.Orange.Medium,
+                                _ => Colors.Blue.Medium
+                            };
 
-                            // Table Header
-                            table.Header(header =>
+                            col.Item().PaddingBottom(15).Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Column(issueCol =>
                             {
-                                header.Cell().Element(CellStyle).Text("Rule ID").Bold();
-                                header.Cell().Element(CellStyle).Text("Issue / File").Bold();
-                                header.Cell().Element(CellStyle).Text("Line").Bold();
-                                header.Cell().Element(CellStyle).Text("Severity").Bold();
-
-                                static IContainer CellStyle(IContainer container) =>
-                                    container.DefaultTextStyle(x => x.Bold())
-                                             .Padding(5)
-                                             .Background(Colors.Grey.Lighten2);
-                            });
-
-                            // Table Rows
-                            foreach (var issue in issues)
-                            {
-                                var severity = GetSeverity(issue.RuleId);
-                                string severityColor = severity switch
+                                // Header Row for Issue
+                                issueCol.Item().Row(r =>
                                 {
-                                    RuleSeverity.Critical => Colors.Red.Medium,
-                                    RuleSeverity.Warning => Colors.Orange.Medium,
-                                    _ => Colors.Blue.Medium
-                                };
-
-                                table.Cell().Element(CellStyle).Text(issue.RuleId);
-                                table.Cell().Element(CellStyle).Column(c =>
-                                {
-                                    c.Item().Text(issue.RuleName).Bold();
-                                    c.Item().Text(issue.FilePath).FontSize(8).FontColor(Colors.Grey.Darken1);
-                                    c.Item().Text($"Code: {issue.Snippet}").FontSize(8).Italic();
+                                    r.RelativeItem().Text($"[{issue.RuleId}] {issue.RuleName}").FontSize(12).Bold();
+                                    r.ConstantItem(80).AlignRight().Text(severity.ToString()).FontColor(severityColor).Bold();
                                 });
-                                table.Cell().Element(CellStyle).Text(issue.LineNumber.ToString());
-                                table.Cell().Element(CellStyle).Text(severity.ToString()).FontColor(severityColor).Bold();
 
-                                static IContainer CellStyle(IContainer container) =>
-                                    container.Padding(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
-                            }
-                        });
+                                issueCol.Item().Text($"Location: {issue.FilePath} (Line {issue.LineNumber})").FontSize(9).FontColor(Colors.Grey.Darken1);
+                                issueCol.Item().Height(5);
+
+                                // Snippet Box
+                                issueCol.Item().Background(Colors.Grey.Lighten4).Padding(6).Text(issue.Snippet).FontFamily("Consolas").FontSize(8);
+
+                                // AI Analysis Section (Includes Detailed Walkthroughs & Pitfalls)
+                                if (!string.IsNullOrWhiteSpace(issue.AiAnalysis))
+                                {
+                                    issueCol.Item().Height(8);
+                                    issueCol.Item().Text("AI Optimization & Guidance:").FontSize(10).Bold().FontColor(Colors.Blue.Darken2);
+                                    issueCol.Item().Text(issue.AiAnalysis).FontSize(9);
+                                }
+                            });
+                        }
                     }
                 });
 
