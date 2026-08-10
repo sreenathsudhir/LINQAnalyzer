@@ -1,29 +1,34 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using LINQAnalyzer.Application.Interfaces;
 using LINQAnalyzer.Domain.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 
 namespace LINQAnalyzer.Infrastructure.Agents;
 
 /// <summary>
 /// Agent 3: Evaluates performance anti-patterns using a generic OpenAI-compatible LLM Gateway API.
+/// Incorporates SHA256 snippet caching to save tokens and improve scan response times.
 /// </summary>
 public class AiPerformanceReviewAgent : IAiReviewAgent
 {
     private readonly HttpClient _httpClient;
+    private readonly IMemoryCache _cache;
     private readonly string _apiKey;
     private readonly string _baseUrl;
     private readonly string _model;
 
-    public AiPerformanceReviewAgent(HttpClient httpClient, IConfiguration configuration)
+    public AiPerformanceReviewAgent(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _cache = cache;
 
         // Strictly generic environment and configuration resolution
         _apiKey = Environment.GetEnvironmentVariable("LLM_API_KEY")
@@ -100,6 +105,14 @@ public class AiPerformanceReviewAgent : IAiReviewAgent
             };
         }
 
+        // Generate a SHA256 cache key using the RuleId and Snippet
+        string cacheKey = ComputeSha256CacheKey(issue.RuleId, issue.Snippet);
+
+        if (_cache.TryGetValue(cacheKey, out AiReviewResult? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         // Using concatenation for backticks prevents markdown formatting conflicts in response viewers
         string backticks = "```";
         string prompt = $@"
@@ -167,6 +180,13 @@ Respond strictly in JSON format with the following keys:
             var result = JsonSerializer.Deserialize<AiReviewResult>(content, jsonOptions) ?? new AiReviewResult();
             result.RuleId = issue.RuleId;
 
+            // Cache the successful result for 24 hours
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromHours(24))
+                .SetSlidingExpiration(TimeSpan.FromHours(4));
+
+            _cache.Set(cacheKey, result, cacheOptions);
+
             return result;
         }
         catch (Exception ex)
@@ -179,5 +199,13 @@ Respond strictly in JSON format with the following keys:
                 Recommendation = "Review manual refactoring guidelines."
             };
         }
+    }
+
+    private static string ComputeSha256CacheKey(string ruleId, string snippet)
+    {
+        string rawInput = $"{ruleId}:{snippet.Trim()}";
+        byte[] inputBytes = Encoding.UTF8.GetBytes(rawInput);
+        byte[] hashBytes = SHA256.HashData(inputBytes);
+        return "AiReview_" + Convert.ToHexString(hashBytes);
     }
 }
