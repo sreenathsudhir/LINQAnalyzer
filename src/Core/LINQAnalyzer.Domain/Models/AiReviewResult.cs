@@ -9,5 +9,7 @@ public class AiReviewResult
     public string RootCause { get; set; } = string.Empty;
     public string PerformanceImpact { get; set; } = string.Empty;
     public string RefactoredCode { get; set; } = string.Empty;
+    public string DetailedExplanation { get; set; } = string.Empty;
+    public string PotentialPitfalls { get; set; } = string.Empty;
     public string Recommendation { get; set; } = string.Empty;
 }

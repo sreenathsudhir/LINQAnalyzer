@@ -54,14 +54,37 @@ public class AiPerformanceReviewAgent : IAiReviewAgent
             return reviewResult.RootCause;
         }
 
-        return "### 💡 AI Root Cause Analysis\n" +
-               reviewResult.RootCause + "\n\n" +
-               "### ⚡ Performance Impact\n" +
-               reviewResult.PerformanceImpact + "\n\n" +
-               "### 🛠️ Refactored Solution\n" +
-               "```csharp\n" + reviewResult.RefactoredCode + "\n```\n\n" +
-               "### 📌 Recommendation\n" +
-               reviewResult.Recommendation;
+        var sb = new StringBuilder();
+        sb.AppendLine("### 💡 AI Root Cause Analysis");
+        sb.AppendLine(reviewResult.RootCause);
+        sb.AppendLine();
+        sb.AppendLine("### ⚡ Performance Impact");
+        sb.AppendLine(reviewResult.PerformanceImpact);
+        sb.AppendLine();
+        sb.AppendLine("### 🛠️ Refactored Solution");
+        sb.AppendLine("```csharp");
+        sb.AppendLine(reviewResult.RefactoredCode);
+        sb.AppendLine("```");
+        sb.AppendLine();
+
+        if (!string.IsNullOrWhiteSpace(reviewResult.DetailedExplanation))
+        {
+            sb.AppendLine("### 📖 Detailed Technical Walkthrough");
+            sb.AppendLine(reviewResult.DetailedExplanation);
+            sb.AppendLine();
+        }
+
+        if (!string.IsNullOrWhiteSpace(reviewResult.PotentialPitfalls))
+        {
+            sb.AppendLine("### ⚠️ Potential Pitfalls & Edge Cases");
+            sb.AppendLine(reviewResult.PotentialPitfalls);
+            sb.AppendLine();
+        }
+
+        sb.AppendLine("### 📌 Recommendation");
+        sb.Append(reviewResult.Recommendation);
+
+        return sb.ToString();
     }
 
     private async Task<AiReviewResult> ReviewIssueInternalAsync(DiscoveredIssue issue, CancellationToken cancellationToken)
@@ -77,12 +100,28 @@ public class AiPerformanceReviewAgent : IAiReviewAgent
             };
         }
 
-        string prompt = "You are a senior .NET Performance Engineer.\n" +
-            "Roslyn AST scanning detected a performance anti-pattern in C# code.\n\n" +
-            "Rule ID: " + issue.RuleId + " (" + issue.RuleName + ")\n" +
-            "File: " + issue.FilePath + " (Line " + issue.LineNumber + ")\n" +
-            "Code Snippet:\n" + issue.Snippet + "\n\n" +
-            "Respond strictly in JSON format with keys: rootCause, performanceImpact, refactoredCode, recommendation.";
+        // Using concatenation for backticks prevents markdown formatting conflicts in response viewers
+        string backticks = "```";
+        string prompt = $@"
+You are a principal .NET and EF Core Performance Engineer.
+Roslyn AST scanning detected a performance anti-pattern in a C# codebase.
+
+Rule ID: {issue.RuleId} ({issue.RuleName})
+File: {issue.FilePath} (Line {issue.LineNumber})
+Code Snippet:
+{backticks}csharp
+{issue.Snippet}
+{backticks}
+
+Provide an in-depth, production-grade technical review.
+Respond strictly in JSON format with the following keys:
+- rootCause: Deep technical root cause explaining why this code pattern harms execution efficiency at the OS/CLR or database level.
+- performanceImpact: Specific runtime impact (e.g., thread pool starvation, memory allocation overhead, excessive SQL roundtrips, I/O blocking).
+- refactoredCode: Complete, compilable, and production-ready C# refactored code showing method context, cancellation tokens, or async keywords where necessary.
+- detailedExplanation: Step-by-step walkthrough explaining how the fix solves the underlying problem under the hood in EF Core/LINQ.
+- potentialPitfalls: Edge cases, memory/tracking considerations, or breaking changes developers should be aware of when applying this fix.
+- recommendation: Actionable architectural guidance and best practices for the team.
+";
 
         try
         {
