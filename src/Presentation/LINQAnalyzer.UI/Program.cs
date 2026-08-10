@@ -68,6 +68,9 @@ builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Register In-Memory Caching (Fixes IMemoryCache injection error)
+builder.Services.AddMemoryCache();
+
 // Agent Registrations
 builder.Services.AddScoped<ICodeDiscoveryAgent, CodeDiscoveryAgent>();
 builder.Services.AddScoped<IPerformanceAnalysisAgent, PerformanceAnalysisAgent>();

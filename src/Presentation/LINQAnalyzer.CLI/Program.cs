@@ -73,6 +73,9 @@ class Program
         var services = new ServiceCollection();
         services.AddSingleton<IConfiguration>(configuration);
 
+        // Register In-Memory Caching for AI Response Cache
+        services.AddMemoryCache();
+
         // Agent 1: Code Discovery
         services.AddScoped<ICodeDiscoveryAgent, CodeDiscoveryAgent>();
 
