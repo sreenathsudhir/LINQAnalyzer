@@ -104,6 +104,7 @@ class Program
         var orchestrator = provider.GetRequiredService<ScanOrchestratorService>();
         var docAgent = provider.GetRequiredService<IDocumentationAgent>();
         var pdfAgent = provider.GetRequiredService<IPdfExportAgent>();
+        var benchmarkAgent = provider.GetRequiredService<IBenchmarkAgent>();
 
         var request = new ScanRequest
         {
@@ -153,14 +154,31 @@ class Program
         byte[] pdfBytes = pdfAgent.GeneratePdfReport(request, scanResult.Issues);
         await File.WriteAllBytesAsync(pdfPath, pdfBytes);
 
+        // Save generated BenchmarkDotNet test harness files for each discovered issue
+        List<string> generatedBenchmarkFiles = new();
+        foreach (var issue in scanResult.Issues)
+        {
+            string benchmarkCode = benchmarkAgent.GenerateBenchmarkHarness(issue, issue.AiAnalysis ?? issue.Snippet);
+            string benchmarkFileName = $"{issue.RuleId.Replace("-", "_")}_Benchmark.cs";
+            string benchmarkPath = Path.Combine(outputDir, benchmarkFileName);
+            await File.WriteAllTextAsync(benchmarkPath, benchmarkCode);
+            generatedBenchmarkFiles.Add(benchmarkFileName);
+        }
+
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("\n✅ Scan Complete!");
         Console.ResetColor();
         Console.WriteLine($"📊 Discovered Issues: {scanResult.Issues.Count}");
         Console.WriteLine($"📁 Reports saved to : {Path.GetFullPath(outputDir)}");
-        Console.WriteLine($"   ├── report.html");
-        Console.WriteLine($"   ├── report.md");
-        Console.WriteLine($"   └── report.pdf\n");
+        Console.WriteLine("   ├── report.html");
+        Console.WriteLine("   ├── report.md");
+        Console.WriteLine("   ├── report.pdf");
+
+        foreach (var benchmarkFile in generatedBenchmarkFiles)
+        {
+            Console.WriteLine($"   └── {benchmarkFile}");
+        }
+        Console.WriteLine();
 
         return 0;
     }

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LINQ Performance Analysis Report</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 30px; background: #f8f9fa; color: #212529; }
+  .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+  .badge { background: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+  pre { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+</style>
+</head><body>
+<h1>🚀 LINQ Performance Analysis Report</h1>
+<div class='card'><strong>Repository:</strong> https://github.com/dotnet/eShop.git<br/><strong>Branch:</strong> main<br/><strong>Date:</strong> Monday, 10 August, 2026 2:41 pm UTC</div>
+<h2>Flagged Issues (115)</h2>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 183)</p>
+<pre><code>Assert.Equal("Wanderer Black Hiking Boots", result.Data.ToList().FirstOrDefault().Name)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal("Wanderer Black Hiking Boots", result.Data.ToList().FirstOrDefault().Name)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 183)</p>
+<pre><code>Assert.Equal("Wanderer Black Hiking Boots", result.Data.ToList().FirstOrDefault().Name)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal("Wanderer Black Hiking Boots", result.Data.ToList().FirstOrDefault().Name)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 183)</p>
+<pre><code>result.Data.ToList().FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Data.ToList().FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 211)</p>
+<pre><code>Assert.Contains("Alpine", result.Data.ToList().FirstOrDefault().Name)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Contains("Alpine", result.Data.ToList().FirstOrDefault().Name)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 211)</p>
+<pre><code>Assert.Contains("Alpine", result.Data.ToList().FirstOrDefault().Name)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Contains("Alpine", result.Data.ToList().FirstOrDefault().Name)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 211)</p>
+<pre><code>result.Data.ToList().FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Data.ToList().FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 284)</p>
+<pre><code>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogTypeId)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogTypeId)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 284)</p>
+<pre><code>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogTypeId)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogTypeId)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 284)</p>
+<pre><code>result.Data.ToList().FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Data.ToList().FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 285)</p>
+<pre><code>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 285)</p>
+<pre><code>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 285)</p>
+<pre><code>result.Data.ToList().FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Data.ToList().FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 313)</p>
+<pre><code>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 313)</p>
+<pre><code>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assert.Equal(3, result.Data.ToList().FirstOrDefault().CatalogBrandId)<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/Catalog.FunctionalTests/CatalogApiTests.cs (Line 313)</p>
+<pre><code>result.Data.ToList().FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Data.ToList().FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/Ordering.FunctionalTests/OrderingApiTests.cs (Line 202)</p>
+<pre><code>payload.Items.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>payload.Items.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Ordering.Infrastructure/MediatorExtension.cs (Line 11)</p>
+<pre><code>domainEntities
+            .SelectMany(x => x.Entity.DomainEvents)
+            .ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>domainEntities<br/>            .SelectMany(x => x.Entity.DomainEvents)<br/>            .ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.Infrastructure/MediatorExtension.cs (Line 11)</p>
+<pre><code>domainEntities
+            .SelectMany(x => x.Entity.DomainEvents)
+            .ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>domainEntities<br/>            .SelectMany(x => x.Entity.DomainEvents)<br/>            .ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Ordering.Infrastructure/MediatorExtension.cs (Line 11)</p>
+<pre><code>domainEntities
+            .SelectMany(x => x.Entity.DomainEvents)
+            .ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>domainEntities<br/>            .SelectMany(x => x.Entity.DomainEvents)<br/>            .ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Ordering.Infrastructure/MediatorExtension.cs (Line 15)</p>
+<pre><code>domainEntities.ToList()
+            .ForEach(entity => entity.Entity.ClearDomainEvents())</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>domainEntities.ToList()<br/>            .ForEach(entity => entity.Entity.ClearDomainEvents())<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.Infrastructure/MediatorExtension.cs (Line 15)</p>
+<pre><code>domainEntities.ToList()
+            .ForEach(entity => entity.Entity.ClearDomainEvents())</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>domainEntities.ToList()<br/>            .ForEach(entity => entity.Entity.ClearDomainEvents())<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Ordering.Infrastructure/MediatorExtension.cs (Line 15)</p>
+<pre><code>domainEntities.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>domainEntities.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF002</span> N+1 Query Pattern in Foreach Loop</h3>
+<p><strong>File:</strong> src/eShop.ServiceDefaults/OpenApiOptionsExtensions.cs (Line 74)</p>
+<pre><code>foreach (var link in policy.Links.Where(l => l.Type == "text/html"))
+                {
+                    if (!rendered...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>foreach (var link in policy.Links.Where(l => l.Type == "text/html"))<br/>                {<br/>                    if (!rendered...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/eShop.ServiceDefaults/OpenApiOptionsExtensions.cs (Line 110)</p>
+<pre><code>options.AddOperationTransformer((operation, context, cancellationToken) =>
+        {
+            var metadata = context....</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>options.AddOperationTransformer((operation, context, cancellationToken) =><br/>        {<br/>            var metadata = context....<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/eShop.ServiceDefaults/OpenApiOptionsExtensions.cs (Line 110)</p>
+<pre><code>options.AddOperationTransformer((operation, context, cancellationToken) =>
+        {
+            var metadata = context....</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>options.AddOperationTransformer((operation, context, cancellationToken) =><br/>        {<br/>            var metadata = context....<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/eShop.ServiceDefaults/OpenApiOptionsExtensions.cs (Line 129)</p>
+<pre><code>scopes.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>scopes.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/eShop.ServiceDefaults/OpenApiOptionsExtensions.cs (Line 129)</p>
+<pre><code>scopes.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>scopes.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/ClientApp.UnitTests/Services/BasketServiceTests.cs (Line 11)</p>
+<pre><code>result.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/ClientApp.UnitTests/Services/OrdersServiceTests.cs (Line 30)</p>
+<pre><code>result.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>result.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/ClientApp.UnitTests/Services/CatalogServiceTests.cs (Line 12)</p>
+<pre><code>catalog.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>catalog.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/ClientApp.UnitTests/Services/CatalogServiceTests.cs (Line 21)</p>
+<pre><code>catalogBrand.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>catalogBrand.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> tests/ClientApp.UnitTests/Services/CatalogServiceTests.cs (Line 30)</p>
+<pre><code>catalogType.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>catalogType.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Services/CatalogAI.cs (Line 41)</p>
+<pre><code>embeddings.Select(m => new Vector(m.Vector[0..EmbeddingDimensions])).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>embeddings.Select(m => new Vector(m.Vector[0..EmbeddingDimensions])).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Catalog.API/Services/CatalogAI.cs (Line 41)</p>
+<pre><code>embeddings.Select(m => new Vector(m.Vector[0..EmbeddingDimensions])).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>embeddings.Select(m => new Vector(m.Vector[0..EmbeddingDimensions])).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Infrastructure/CatalogContextSeed.cs (Line 30)</p>
+<pre><code>context.CatalogBrands.AddRangeAsync(sourceItems.Select(x => x.Brand).Distinct()
+                .Where(brandName => bran...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogBrands.AddRangeAsync(sourceItems.Select(x => x.Brand).Distinct()<br/>                .Where(brandName => bran...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Catalog.API/Infrastructure/CatalogContextSeed.cs (Line 33)</p>
+<pre><code>context.CatalogBrands.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogBrands.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Infrastructure/CatalogContextSeed.cs (Line 36)</p>
+<pre><code>context.CatalogTypes.AddRangeAsync(sourceItems.Select(x => x.Type).Distinct()
+                .Where(typeName => typeNam...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogTypes.AddRangeAsync(sourceItems.Select(x => x.Type).Distinct()<br/>                .Where(typeName => typeNam...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Catalog.API/Infrastructure/CatalogContextSeed.cs (Line 39)</p>
+<pre><code>context.CatalogTypes.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogTypes.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Infrastructure/CatalogContextSeed.cs (Line 46)</p>
+<pre><code>sourceItems
+                .Where(source => source.Name != null && source.Brand != null && source.Type != null)
+       ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>sourceItems<br/>                .Where(source => source.Name != null && source.Brand != null && source.Type != null)<br/>       ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Catalog.API/Infrastructure/CatalogContextSeed.cs (Line 72)</p>
+<pre><code>context.CatalogItems.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogItems.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 77)</p>
+<pre><code>api.MapGet("/catalogtypes",
+            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applicat...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/catalogtypes",<br/>            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applicat...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 77)</p>
+<pre><code>api.MapGet("/catalogtypes",
+            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applicat...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/catalogtypes",<br/>            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applicat...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 79)</p>
+<pre><code>context.CatalogTypes.OrderBy(x => x.Type).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogTypes.OrderBy(x => x.Type).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 79)</p>
+<pre><code>context.CatalogTypes.OrderBy(x => x.Type).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogTypes.OrderBy(x => x.Type).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 84)</p>
+<pre><code>api.MapGet("/catalogbrands",
+            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applica...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/catalogbrands",<br/>            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applica...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 84)</p>
+<pre><code>api.MapGet("/catalogbrands",
+            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applica...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/catalogbrands",<br/>            [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "applica...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 86)</p>
+<pre><code>context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 86)</p>
+<pre><code>context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 138)</p>
+<pre><code>root.Where(c => c.Name.StartsWith(name))</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>root.Where(c => c.Name.StartsWith(name))<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 152)</p>
+<pre><code>root
+            .OrderBy(c => c.Name)
+            .Skip(pageSize * pageIndex)
+            .Take(pageSize)
+            ....</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>root<br/>            .OrderBy(c => c.Name)<br/>            .Skip(pageSize * pageIndex)<br/>            .Take(pageSize)<br/>            ....<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 152)</p>
+<pre><code>root
+            .OrderBy(c => c.Name)
+            .Skip(pageSize * pageIndex)
+            .Take(pageSize)
+            ....</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>root<br/>            .OrderBy(c => c.Name)<br/>            .Skip(pageSize * pageIndex)<br/>            .Take(pageSize)<br/>            ....<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 166)</p>
+<pre><code>services.Context.CatalogItems.Where(item => ids.Contains(item.Id)).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems.Where(item => ids.Contains(item.Id)).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 166)</p>
+<pre><code>services.Context.CatalogItems.Where(item => ids.Contains(item.Id)).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems.Where(item => ids.Contains(item.Id)).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 166)</p>
+<pre><code>services.Context.CatalogItems.Where(item => ids.Contains(item.Id))</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems.Where(item => ids.Contains(item.Id))<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 266)</p>
+<pre><code>services.Context.CatalogItems
+                .Where(c => c.Embedding != null)
+                .Select(c => new { Item =...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems<br/>                .Where(c => c.Embedding != null)<br/>                .Select(c => new { Item =...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 266)</p>
+<pre><code>services.Context.CatalogItems
+                .Where(c => c.Embedding != null)
+                .Select(c => new { Item =...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems<br/>                .Where(c => c.Embedding != null)<br/>                .Select(c => new { Item =...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 276)</p>
+<pre><code>itemsWithDistance.Select(i => i.Item).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>itemsWithDistance.Select(i => i.Item).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 276)</p>
+<pre><code>itemsWithDistance.Select(i => i.Item).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>itemsWithDistance.Select(i => i.Item).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 280)</p>
+<pre><code>services.Context.CatalogItems
+                .Where(c => c.Embedding != null)
+                .OrderBy(c => c.Embedding...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems<br/>                .Where(c => c.Embedding != null)<br/>                .OrderBy(c => c.Embedding...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 280)</p>
+<pre><code>services.Context.CatalogItems
+                .Where(c => c.Embedding != null)
+                .OrderBy(c => c.Embedding...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems<br/>                .Where(c => c.Embedding != null)<br/>                .OrderBy(c => c.Embedding...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Catalog.API/Apis/CatalogApi.cs (Line 280)</p>
+<pre><code>services.Context.CatalogItems
+                .Where(c => c.Embedding != null)
+                .OrderBy(c => c.Embedding...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>services.Context.CatalogItems<br/>                .Where(c => c.Embedding != null)<br/>                .OrderBy(c => c.Embedding...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/ClientApp/ViewModels/CheckoutViewModel.cs (Line 98)</p>
+<pre><code>orders.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>orders.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/ClientApp/Validations/ValidatableObject.cs (Line 38)</p>
+<pre><code>.Where(v => !v.Check(Value))</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>.Where(v => !v.Check(Value))<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 35)</p>
+<pre><code>(await FetchBasketItemsAsync()).Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>(await FetchBasketItemsAsync()).Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 35)</p>
+<pre><code>(await FetchBasketItemsAsync()).Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>(await FetchBasketItemsAsync()).Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 60)</p>
+<pre><code>(await FetchBasketItemsAsync()).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>(await FetchBasketItemsAsync()).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 60)</p>
+<pre><code>(await FetchBasketItemsAsync()).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>(await FetchBasketItemsAsync()).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 60)</p>
+<pre><code>(await FetchBasketItemsAsync()).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>(await FetchBasketItemsAsync()).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 73)</p>
+<pre><code>basketService.UpdateBasketAsync(existingItems.Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList())</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>basketService.UpdateBasketAsync(existingItems.Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList())<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/WebApp/Services/BasketState.cs (Line 73)</p>
+<pre><code>existingItems.Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>existingItems.Select(i => new BasketQuantity(i.ProductId, i.Quantity)).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Webhooks.API/IntegrationEvents/OrderStatusChangedToPaidIntegrationEventHandler.cs (Line 12)</p>
+<pre><code>subscriptions.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>subscriptions.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Webhooks.API/IntegrationEvents/OrderStatusChangedToShippedIntegrationEventHandler.cs (Line 12)</p>
+<pre><code>subscriptions.Count()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>subscriptions.Count()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Webhooks.API/Services/GrantUrlTesterService.cs (Line 22)</p>
+<pre><code>tokenValues.FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>tokenValues.FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Webhooks.API/Services/WebhooksRetriever.cs (Line 7)</p>
+<pre><code>db.Subscriptions.Where(s => s.Type == type).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>db.Subscriptions.Where(s => s.Type == type).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Webhooks.API/Services/WebhooksRetriever.cs (Line 7)</p>
+<pre><code>db.Subscriptions.Where(s => s.Type == type).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>db.Subscriptions.Where(s => s.Type == type).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Webhooks.API/Apis/WebHooksApi.cs (Line 13)</p>
+<pre><code>api.MapGet("/", async (WebhooksContext context, ClaimsPrincipal user) =>
+        {
+            var userId = user.GetUser...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/", async (WebhooksContext context, ClaimsPrincipal user) =><br/>        {<br/>            var userId = user.GetUser...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Webhooks.API/Apis/WebHooksApi.cs (Line 13)</p>
+<pre><code>api.MapGet("/", async (WebhooksContext context, ClaimsPrincipal user) =>
+        {
+            var userId = user.GetUser...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/", async (WebhooksContext context, ClaimsPrincipal user) =><br/>        {<br/>            var userId = user.GetUser...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Webhooks.API/Apis/WebHooksApi.cs (Line 13)</p>
+<pre><code>api.MapGet("/", async (WebhooksContext context, ClaimsPrincipal user) =>
+        {
+            var userId = user.GetUser...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>api.MapGet("/", async (WebhooksContext context, ClaimsPrincipal user) =><br/>        {<br/>            var userId = user.GetUser...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Webhooks.API/Apis/WebHooksApi.cs (Line 16)</p>
+<pre><code>context.Subscriptions.Where(s => s.UserId == userId).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.Subscriptions.Where(s => s.UserId == userId).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Webhooks.API/Apis/WebHooksApi.cs (Line 16)</p>
+<pre><code>context.Subscriptions.Where(s => s.UserId == userId).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.Subscriptions.Where(s => s.UserId == userId).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/IntegrationEventLogEF/Services/IntegrationEventLogService.cs (Line 13)</p>
+<pre><code>Assembly.Load(Assembly.GetEntryAssembly().FullName)
+            .GetTypes()
+            .Where(t => t.Name.EndsWith(name...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>Assembly.Load(Assembly.GetEntryAssembly().FullName)<br/>            .GetTypes()<br/>            .Where(t => t.Name.EndsWith(name...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/IntegrationEventLogEF/Services/IntegrationEventLogService.cs (Line 21)</p>
+<pre><code>_context.Set<IntegrationEventLogEntry>()
+            .Where(e => e.TransactionId == transactionId && e.State == EventSta...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>_context.Set<IntegrationEventLogEntry>()<br/>            .Where(e => e.TransactionId == transactionId && e.State == EventSta...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/IntegrationEventLogEF/Services/IntegrationEventLogService.cs (Line 21)</p>
+<pre><code>_context.Set<IntegrationEventLogEntry>()
+            .Where(e => e.TransactionId == transactionId && e.State == EventSta...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>_context.Set<IntegrationEventLogEntry>()<br/>            .Where(e => e.TransactionId == transactionId && e.State == EventSta...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Services/ProfileService.cs (Line 16)</p>
+<pre><code>subject.Claims.Where(x => x.Type == "sub").FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>subject.Claims.Where(x => x.Type == "sub").FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Identity.API/Services/ProfileService.cs (Line 23)</p>
+<pre><code>claims.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>claims.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Identity.API/Services/ProfileService.cs (Line 23)</p>
+<pre><code>claims.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>claims.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Services/ProfileService.cs (Line 23)</p>
+<pre><code>claims.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>claims.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Services/ProfileService.cs (Line 30)</p>
+<pre><code>subject.Claims.Where(x => x.Type == "sub").FirstOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>subject.Claims.Where(x => x.Type == "sub").FirstOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Services/ProfileService.cs (Line 39)</p>
+<pre><code>subject.Claims.Where(c => c.Type == "security_stamp").Select(c => c.Value).SingleOrDefault()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>subject.Claims.Where(c => c.Type == "security_stamp").Select(c => c.Value).SingleOrDefault()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> tests/Ordering.UnitTests/Domain/SeedWork/ValueObjectTests.cs (Line 148)</p>
+<pre><code>c.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>c.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> tests/Ordering.UnitTests/Domain/SeedWork/ValueObjectTests.cs (Line 148)</p>
+<pre><code>c.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>c.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF002</span> N+1 Query Pattern in Foreach Loop</h3>
+<p><strong>File:</strong> src/Catalog.API/IntegrationEvents/EventHandling/OrderStatusChangedToAwaitingValidationIntegrationEventHandler.cs (Line 15)</p>
+<pre><code>foreach (var orderStockItem in @event.OrderStockItems)
+        {
+            var catalogItem = catalogContext.CatalogIte...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>foreach (var orderStockItem in @event.OrderStockItems)<br/>        {<br/>            var catalogItem = catalogContext.CatalogIte...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF002</span> N+1 Query Pattern in Foreach Loop</h3>
+<p><strong>File:</strong> src/Catalog.API/IntegrationEvents/EventHandling/OrderStatusChangedToPaidIntegrationEventHandler.cs (Line 13)</p>
+<pre><code>foreach (var orderStockItem in @event.OrderStockItems)
+        {
+            var catalogItem = catalogContext.CatalogIte...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>foreach (var orderStockItem in @event.OrderStockItems)<br/>        {<br/>            var catalogItem = catalogContext.CatalogIte...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Behaviors/ValidatorBehavior.cs (Line 23)</p>
+<pre><code>validationResults
+            .SelectMany(result => result.Errors)
+            .Where(error => error != null)
+          ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>validationResults<br/>            .SelectMany(result => result.Errors)<br/>            .Where(error => error != null)<br/>          ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Behaviors/ValidatorBehavior.cs (Line 23)</p>
+<pre><code>validationResults
+            .SelectMany(result => result.Errors)
+            .Where(error => error != null)
+          ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>validationResults<br/>            .SelectMany(result => result.Errors)<br/>            .Where(error => error != null)<br/>          ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Behaviors/ValidatorBehavior.cs (Line 23)</p>
+<pre><code>validationResults
+            .SelectMany(result => result.Errors)
+            .Where(error => error != null)
+          ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>validationResults<br/>            .SelectMany(result => result.Errors)<br/>            .Where(error => error != null)<br/>          ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Queries/OrderQueries.cs (Line 27)</p>
+<pre><code>order.OrderItems.Select(oi => new Orderitem
+            {
+                ProductName = oi.ProductName,
+                ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>order.OrderItems.Select(oi => new Orderitem<br/>            {<br/>                ProductName = oi.ProductName,<br/>                ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Queries/OrderQueries.cs (Line 27)</p>
+<pre><code>order.OrderItems.Select(oi => new Orderitem
+            {
+                ProductName = oi.ProductName,
+                ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>order.OrderItems.Select(oi => new Orderitem<br/>            {<br/>                ProductName = oi.ProductName,<br/>                ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Queries/OrderQueries.cs (Line 39)</p>
+<pre><code>context.Orders
+            .Where(o => o.Buyer.IdentityGuid == userId)  
+            .Select(o => new OrderSummary
+     ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.Orders<br/>            .Where(o => o.Buyer.IdentityGuid == userId)  <br/>            .Select(o => new OrderSummary<br/>     ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Queries/OrderQueries.cs (Line 39)</p>
+<pre><code>context.Orders
+            .Where(o => o.Buyer.IdentityGuid == userId)  
+            .Select(o => new OrderSummary
+     ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.Orders<br/>            .Where(o => o.Buyer.IdentityGuid == userId)  <br/>            .Select(o => new OrderSummary<br/>     ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Queries/OrderQueries.cs (Line 52)</p>
+<pre><code>context.CardTypes.Select(c=> new CardType { Id = c.Id, Name = c.Name }).ToListAsync()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>context.CardTypes.Select(c=> new CardType { Id = c.Id, Name = c.Name }).ToListAsync()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Commands/CreateOrderCommand.cs (Line 70)</p>
+<pre><code>basketItems.ToOrderItemsDTO().ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>basketItems.ToOrderItemsDTO().ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/Commands/CreateOrderCommand.cs (Line 70)</p>
+<pre><code>basketItems.ToOrderItemsDTO().ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>basketItems.ToOrderItemsDTO().ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Ordering.Domain/AggregatesModel/OrderAggregate/Order.cs (Line 161)</p>
+<pre><code>OrderItems
+                .Where(c => orderStockRejectedItems.Contains(c.ProductId))</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>OrderItems<br/>                .Where(c => orderStockRejectedItems.Contains(c.ProductId))<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/AccountController.cs (Line 231)</p>
+<pre><code>schemes
+                .Where(x => x.DisplayName != null)
+                .Select(x => new ExternalProvider
+           ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>schemes<br/>                .Where(x => x.DisplayName != null)<br/>                .Select(x => new ExternalProvider<br/>           ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/AccountController.cs (Line 231)</p>
+<pre><code>schemes
+                .Where(x => x.DisplayName != null)
+                .Select(x => new ExternalProvider
+           ...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>schemes<br/>                .Where(x => x.DisplayName != null)<br/>                .Select(x => new ExternalProvider<br/>           ...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/AccountController.cs (Line 249)</p>
+<pre><code>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/AccountController.cs (Line 249)</p>
+<pre><code>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/AccountController.cs (Line 249)</p>
+<pre><code>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF005</span> Client-Side Evaluation Trap</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/AccountController.cs (Line 249)</p>
+<pre><code>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme))</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme))<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>LINQ003</span> Missing Projection (.Select)</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/ExternalController.cs (Line 148)</p>
+<pre><code>externalUser.Claims.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>externalUser.Claims.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/ExternalController.cs (Line 148)</p>
+<pre><code>externalUser.Claims.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>externalUser.Claims.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Identity.API/Quickstart/Account/ExternalController.cs (Line 148)</p>
+<pre><code>externalUser.Claims.ToList()</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>externalUser.Claims.ToList()<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF001</span> Missing AsNoTracking() in Read-Only Query</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/IntegrationEvents/EventHandling/OrderStockRejectedIntegrationEventHandler.cs (Line 10)</p>
+<pre><code>@event.OrderStockItems
+            .FindAll(c => !c.HasStock)
+            .Select(c => c.ProductId)
+            .ToList(...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>@event.OrderStockItems<br/>            .FindAll(c => !c.HasStock)<br/>            .Select(c => c.ProductId)<br/>            .ToList(...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+<div class='card'>
+<h3><span class='badge'>EF004</span> Synchronous DB Call in Async Method</h3>
+<p><strong>File:</strong> src/Ordering.API/Application/IntegrationEvents/EventHandling/OrderStockRejectedIntegrationEventHandler.cs (Line 10)</p>
+<pre><code>@event.OrderStockItems
+            .FindAll(c => !c.HasStock)
+            .Select(c => c.ProductId)
+            .ToList(...</code></pre>
+<h4>AI Optimization Analysis</h4>
+<div>### 💡 AI Root Cause Analysis<br/>AI Evaluation Error: HTTP 403: <!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width, initial-scale=1"><title>403</title>403 Forbidden<br/><br/>### ⚡ Performance Impact<br/><br/><br/>### 🛠️ Refactored Solution<br/>```csharp<br/>@event.OrderStockItems<br/>            .FindAll(c => !c.HasStock)<br/>            .Select(c => c.ProductId)<br/>            .ToList(...<br/>```<br/><br/>### 📌 Recommendation<br/>Review manual refactoring guidelines.</div>
+</div>
+</body></html>
